@@ -14,7 +14,7 @@ const schema = z.object({
   project: z.string().trim().min(1, "Tell me about your project").max(1000),
 });
 
-const WHATSAPP_NUMBER = "1234567890"; // replace with real number
+const WHATSAPP_NUMBER = "919497127222";
 
 export const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", project: "" });
@@ -35,7 +35,9 @@ export const Contact = () => {
     }, 600);
   };
 
-  const waText = encodeURIComponent("Hi NelliDesign, I'd like a quote for a brochure project.");
+  const waText = encodeURIComponent(
+    "Hi NelliDesign 👋,\n\nI came across your work and I'd love to get a quote for a brochure project.\n\n• Brochure type: \n• Approx. pages: \n• Timeline: \n\nLooking forward to hearing from you!"
+  );
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
 
   return (
