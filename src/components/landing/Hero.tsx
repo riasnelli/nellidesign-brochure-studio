@@ -13,8 +13,8 @@ export const Hero = () => {
             <Sparkles size={14} className="text-accent" />
             Trusted brochure design since 2009 · 15+ years
           </div>
-          <h1 className="fade-up fade-up-delay-1 text-5xl md:text-7xl lg:text-8xl font-display font-medium leading-[0.95] text-balance">
-            Brochures that <em className="not-italic text-accent">sell</em>,<br className="hidden md:block" /> not just inform.
+          <h1 className="fade-up fade-up-delay-1 text-5xl md:text-7xl lg:text-8xl font-display font-semibold tracking-tight leading-[0.95] text-balance">
+            Brochures that <span className="text-accent">sell</span>,<br className="hidden md:block" /> not just inform.
           </h1>
           <p className="fade-up fade-up-delay-2 mt-7 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
             Premium, conversion-led brochure design for ambitious brands. Strategy + craft, delivered print-ready.
