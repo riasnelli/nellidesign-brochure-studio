@@ -36,7 +36,7 @@ export const Hero = () => {
           <div className="absolute -inset-4 bg-gradient-accent opacity-20 blur-3xl rounded-[3rem]" aria-hidden />
           <img
             src={heroImg}
-            alt="Premium corporate brochure designs by NelliDesign"
+            alt="Premium corporate brochure designs by NelliDESiGN"
             width={1600}
             height={1200}
             className="relative w-full rounded-3xl shadow-card"

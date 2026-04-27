@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 const Index = () => {
   useEffect(() => {
-    document.title = "NelliDesign — Premium Brochure Design | Company Profiles, Catalogues, Corporate";
+    document.title = "NelliDESiGN — Premium Brochure Design | Company Profiles, Catalogues, Corporate";
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
       if (!el) {
@@ -26,7 +26,7 @@ const Index = () => {
     };
     setMeta(
       "description",
-      "Premium brochure design by NelliDesign. 15+ years crafting company profiles, product catalogues and corporate brochures that convert. Get a fixed quote in 24 hours."
+      "Premium brochure design by NelliDESiGN. 15+ years crafting company profiles, product catalogues and corporate brochures that convert. Get a fixed quote in 24 hours."
     );
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
@@ -39,7 +39,7 @@ const Index = () => {
     const ld = {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
-      name: "NelliDesign",
+      name: "NelliDESiGN",
       description: "Premium brochure design studio specialising in company profiles, product catalogues and corporate brochures.",
       areaServed: "Worldwide",
       url: window.location.origin,
