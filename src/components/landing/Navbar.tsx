@@ -17,7 +17,7 @@ export const Navbar = () => {
       <nav className="container flex items-center justify-between h-16" aria-label="Primary">
         <a href="#top" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-accent" aria-hidden />
-          Nelli<span className="text-accent">.</span>Design
+          NelliDESiGN
         </a>
         <ul className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           {links.map((l) => (
