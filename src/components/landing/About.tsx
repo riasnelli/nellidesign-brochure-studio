@@ -11,7 +11,7 @@ export const About = () => (
             <div className="absolute -inset-6 bg-gradient-accent opacity-15 blur-3xl rounded-3xl" aria-hidden />
             <img
               src={portrait}
-              alt="NelliDesign — independent brochure designer"
+              alt="NelliDESiGN — independent brochure designer"
               loading="lazy"
               width={900}
               height={1100}
