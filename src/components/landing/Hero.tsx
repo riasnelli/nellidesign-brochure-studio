@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import heroImg from "@/assets/hero-brochures.jpg";
+import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
 export const Hero = () => {
   return (
@@ -9,9 +10,12 @@ export const Hero = () => {
       <div className="absolute inset-0 bg-gradient-soft" aria-hidden />
       <div className="container relative">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border/60 shadow-soft text-xs font-medium text-muted-foreground mb-8">
-            <Sparkles size={14} className="text-accent" />
-            Trusted brochure design since 2009 · 15+ years
+          <div className="fade-up flex flex-wrap items-center justify-center gap-2.5 mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border/60 shadow-soft text-xs font-medium text-muted-foreground">
+              <Sparkles size={14} className="text-accent" />
+              Trusted brochure design since 2009 · 15+ years
+            </div>
+            <GoogleReviewBadge />
           </div>
           <h1 className="fade-up fade-up-delay-1 text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[0.95] text-balance">
             Brochures that <span className="text-accent italic">sell</span>,<br className="hidden md:block" /> not just inform.
