@@ -1,5 +1,10 @@
 import { Reveal } from "@/components/Reveal";
 import { Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import avatarMohamed from "@/assets/review-mohamed.jpg";
+import avatarCorinne from "@/assets/review-corinne.jpg";
+import avatarCaptain from "@/assets/review-captain.jpg";
 
 const GoogleG = ({ size = 18 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
@@ -14,8 +19,7 @@ type Review = {
   name: string;
   meta: string;
   date: string;
-  initial?: string;
-  avatarColor?: string;
+  avatar: string;
   quote: string;
 };
 
@@ -24,8 +28,7 @@ const items: Review[] = [
     name: "Mohamed Ajmal Abdul Salam",
     meta: "Local Guide · 15 reviews · 16 photos",
     date: "12 Oct 2023",
-    initial: "M",
-    avatarColor: "#1A73E8",
+    avatar: avatarMohamed,
     quote:
       "Mr. Rias was a through professional in bringing to life my ideas through creative use of his many years of experience in this field. He was able to point out the many intricacies of design and modern standards that we ourselves would not usually be aware, and correct our preferences, where required. Would definitely recommend !",
   },
@@ -33,8 +36,7 @@ const items: Review[] = [
     name: "Corinne Bertschi",
     meta: "3 reviews",
     date: "31 Oct 2023",
-    initial: "C",
-    avatarColor: "#7B4FFF",
+    avatar: avatarCorinne,
     quote:
       "I can simply say that NelliDesign did the best job ever. I would particularly like to emphasize that he was able to graphically implement my ideas extremely well and I received an answer within hours. It became clear to me pretty quickly that with NelliDesign I was not \u201Cjust\u201D developing the logo and wine etiquette but also the homepage.",
   },
@@ -42,76 +44,124 @@ const items: Review[] = [
     name: "Captain Neanderthal",
     meta: "2 reviews",
     date: "3 Aug 2022",
-    initial: "C",
-    avatarColor: "#0F9D58",
+    avatar: avatarCaptain,
     quote:
       "I used NelliDesiGN's services recently for some flyers and brochures for one of our companies. It was a very smooth deal. I met him once in Kochi to develop a personal connection and thereafter all my communications were either through emails, phone calls or whats app chats. It was very easy to communicate with Rias who understood our needs. We are very happy with his work and will use him for a lot more design work in the near future. I recommend him highly and wish him all the very best. Captain Nair",
   },
 ];
 
-export const Testimonials = () => (
-  <section className="py-24 md:py-32 bg-secondary/30">
-    <div className="container">
-      <Reveal>
-        <div className="max-w-2xl mb-14">
-          <p className="text-xs uppercase tracking-[0.2em] text-accent font-medium mb-4">Reviews</p>
-          <h2 className="text-4xl md:text-5xl font-display font-medium text-balance mb-6">
-            What clients say on Google.
-          </h2>
-          <a
-            href="https://share.google/dhdPfWZGNulmH4gAK"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-card border border-border/60 shadow-soft hover:shadow-card transition-all"
-          >
-            <GoogleG size={18} />
-            <span className="text-sm font-semibold">Google</span>
-            <span className="h-4 w-px bg-border" />
-            <span className="text-sm font-bold">5.0</span>
-            <span className="flex gap-0.5 text-[#FBBC04]">
-              {Array.from({ length: 5 }).map((_, k) => (
-                <Star key={k} size={13} fill="currentColor" strokeWidth={0} />
-              ))}
-            </span>
-            <span className="text-xs text-muted-foreground">· verified reviews</span>
-          </a>
+const ReviewCard = ({ t }: { t: Review }) => (
+  <figure className="h-full p-7 rounded-2xl bg-card border border-border/60 shadow-soft flex flex-col">
+    <header className="flex items-start justify-between gap-3 mb-4">
+      <div className="flex items-center gap-3 min-w-0">
+        <img
+          src={t.avatar}
+          alt={`${t.name} profile photo`}
+          width={40}
+          height={40}
+          loading="lazy"
+          className="h-10 w-10 rounded-full object-cover flex-shrink-0"
+        />
+        <div className="min-w-0">
+          <div className="font-medium text-sm text-[#1A73E8] truncate">{t.name}</div>
+          <div className="text-xs text-muted-foreground truncate">{t.meta}</div>
         </div>
-      </Reveal>
-      <div className="grid md:grid-cols-3 gap-6">
-        {items.map((t, i) => (
-          <Reveal key={t.name} delay={i * 100}>
-            <figure className="h-full p-7 rounded-2xl bg-card border border-border/60 shadow-soft flex flex-col">
-              <header className="flex items-start justify-between gap-3 mb-4">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className="h-10 w-10 rounded-full flex items-center justify-center text-white font-medium text-base flex-shrink-0"
-                    style={{ backgroundColor: t.avatarColor }}
-                    aria-hidden
-                  >
-                    {t.initial}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-medium text-sm text-[#1A73E8] truncate">{t.name}</div>
-                    <div className="text-xs text-muted-foreground truncate">{t.meta}</div>
-                  </div>
-                </div>
-                <GoogleG size={18} />
-              </header>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex gap-0.5 text-[#FBBC04]">
-                  {Array.from({ length: 5 }).map((_, k) => (
-                    <Star key={k} size={14} fill="currentColor" strokeWidth={0} />
-                  ))}
-                </div>
-                <span className="text-xs text-muted-foreground">{t.date}</span>
-              </div>
-              <blockquote className="text-sm leading-relaxed text-foreground/85 flex-1">
-                {t.quote}
-              </blockquote>
-            </figure>
-          </Reveal>
+      </div>
+      <GoogleG size={18} />
+    </header>
+    <div className="flex items-center gap-2 mb-3">
+      <div className="flex gap-0.5 text-[#FBBC04]">
+        {Array.from({ length: 5 }).map((_, k) => (
+          <Star key={k} size={14} fill="currentColor" strokeWidth={0} />
         ))}
       </div>
+      <span className="text-xs text-muted-foreground">{t.date}</span>
     </div>
-  </section>
+    <blockquote className="text-sm leading-relaxed text-foreground/85 flex-1 overflow-y-auto pr-1 max-h-[180px] [scrollbar-width:thin] [scrollbar-color:hsl(var(--border))_transparent]">
+      {t.quote}
+    </blockquote>
+  </figure>
 );
+
+export const Testimonials = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false });
+  const [selected, setSelected] = useState(0);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
+
+  return (
+    <section className="py-24 md:py-32 bg-secondary/30">
+      <div className="container">
+        <Reveal>
+          <div className="max-w-2xl mb-14">
+            <p className="text-xs uppercase tracking-[0.2em] text-accent font-medium mb-4">Reviews</p>
+            <h2 className="text-4xl md:text-5xl font-display font-medium text-balance mb-6">
+              What clients say on Google.
+            </h2>
+            <a
+              href="https://share.google/dhdPfWZGNulmH4gAK"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-card border border-border/60 shadow-soft hover:shadow-card transition-all"
+            >
+              <GoogleG size={18} />
+              <span className="text-sm font-semibold">Google</span>
+              <span className="h-4 w-px bg-border" />
+              <span className="text-sm font-bold">5.0</span>
+              <span className="flex gap-0.5 text-[#FBBC04]">
+                {Array.from({ length: 5 }).map((_, k) => (
+                  <Star key={k} size={13} fill="currentColor" strokeWidth={0} />
+                ))}
+              </span>
+              <span className="text-xs text-muted-foreground">· verified reviews</span>
+            </a>
+          </div>
+        </Reveal>
+
+        {/* Desktop / Tablet grid — equal heights */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6 items-stretch">
+          {items.map((t, i) => (
+            <Reveal key={t.name} delay={i * 100}>
+              <ReviewCard t={t} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Mobile swipeable carousel */}
+        <div className="md:hidden">
+          <div className="overflow-hidden -mx-4 px-4" ref={emblaRef}>
+            <div className="flex gap-4">
+              {items.map((t) => (
+                <div key={t.name} className="flex-[0_0_88%] min-w-0">
+                  <ReviewCard t={t} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Reviews navigation">
+            {items.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Go to review ${i + 1}`}
+                aria-selected={selected === i}
+                onClick={() => emblaApi?.scrollTo(i)}
+                className={`h-2 rounded-full transition-all ${
+                  selected === i ? "w-6 bg-foreground" : "w-2 bg-border"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
