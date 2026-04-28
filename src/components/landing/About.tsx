@@ -11,11 +11,14 @@ export const About = () => (
             <div className="absolute -inset-6 bg-gradient-accent opacity-15 blur-3xl rounded-3xl" aria-hidden />
             <img
               src={portrait}
-              alt="NelliDESiGN — independent brochure designer"
+              alt="Riasnelli — independent brochure design expert and founder of NelliDESiGN studio"
+              title="Riasnelli — Brochure Design Expert at NelliDESiGN"
               loading="lazy"
+              decoding="async"
               width={900}
               height={1100}
-              className="relative rounded-3xl shadow-card w-full max-w-md"
+              itemProp="image"
+              className="relative rounded-3xl shadow-card w-full max-w-md object-cover"
             />
           </div>
         </Reveal>
