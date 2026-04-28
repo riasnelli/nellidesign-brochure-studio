@@ -17,7 +17,7 @@ export const Hero = () => {
             </div>
             <GoogleReviewBadge />
           </div>
-          <h1 className="fade-up fade-up-delay-1 text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[0.95] text-balance">
+          <h1 className="fade-up fade-up-delay-1 font-display font-bold tracking-tight leading-[0.95] text-balance" style={{ fontSize: "5.5rem" }}>
             Brochures that <span className="text-accent italic">perform</span>,<br className="hidden md:block" /> not just inform.
           </h1>
           <p className="fade-up fade-up-delay-2 mt-7 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
