@@ -1,20 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { ArrowUpRight } from "lucide-react";
-import p1 from "@/assets/project-1.jpg";
-import p2 from "@/assets/project-2.jpg";
-import p3 from "@/assets/project-3.jpg";
-import p4 from "@/assets/project-4.jpg";
-import p5 from "@/assets/project-5.jpg";
-import p6 from "@/assets/project-6.jpg";
-
-const projects = [
-  { title: "Meridian Capital", category: "Company Profile", img: p1, pdf: "#" },
-  { title: "Atelier Goods Co.", category: "Product Catalogue", img: p2, pdf: "#" },
-  { title: "Verde Holdings", category: "Corporate Brochure", img: p3, pdf: "#" },
-  { title: "Northline Estates", category: "Real Estate", img: p4, pdf: "#" },
-  { title: "Bistro 32", category: "Hospitality Menu", img: p5, pdf: "#" },
-  { title: "UbnMe Healthcare", category: "Annual Report", img: p6, pdf: "#" },
-];
+import { brochures } from "@/data/brochures";
 
 export const Projects = () => (
   <section id="work" className="py-24 md:py-32">
@@ -34,33 +20,40 @@ export const Projects = () => (
       </Reveal>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {projects.map((p, i) => (
-          <Reveal key={p.title} delay={i * 80}>
-            <a
-              href={p.pdf}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block"
-            >
-              <div className="relative overflow-hidden rounded-2xl bg-secondary aspect-[4/5] shadow-soft">
-                <img
-                  src={p.img}
-                  alt={`${p.title} brochure design`}
-                  loading="lazy"
-                  width={900}
-                  height={1100}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
-                  <ArrowUpRight size={18} />
+        {brochures.map((b, i) => (
+          <Reveal key={b.slug} delay={i * 80}>
+            <article>
+              <a
+                href={`/brochures/${b.slug}/file.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`View ${b.title} brochure PDF`}
+                className="group block"
+              >
+                <div className="relative overflow-hidden rounded-2xl bg-secondary aspect-[4/5] shadow-soft">
+                  <img
+                    src={`/brochures/${b.slug}/thumbnail.jpg`}
+                    alt={`${b.title} brochure design - ${b.category}`}
+                    loading="lazy"
+                    width={900}
+                    height={1100}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8">
+                    <span className="text-background font-display text-lg font-medium tracking-wide">
+                      View Brochure
+                    </span>
+                  </div>
+                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-card flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+                    <ArrowUpRight size={18} />
+                  </div>
                 </div>
-              </div>
-              <div className="mt-4 flex items-baseline justify-between gap-3">
-                <h3 className="font-display text-lg font-medium">{p.title}</h3>
-                <span className="text-xs text-muted-foreground">{p.category}</span>
-              </div>
-            </a>
+                <div className="mt-4 flex items-baseline justify-between gap-3">
+                  <h3 className="font-display text-lg font-medium">{b.title}</h3>
+                  <span className="text-xs text-muted-foreground">{b.category}</span>
+                </div>
+              </a>
+            </article>
           </Reveal>
         ))}
       </div>
