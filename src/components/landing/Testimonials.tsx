@@ -83,6 +83,41 @@ const ReviewCard = ({ t }: { t: Review }) => (
   </figure>
 );
 
+const toIsoDate = (d: string) => {
+  // Convert "12 Oct 2023" → "2023-10-12"
+  const parsed = new Date(d);
+  return isNaN(parsed.getTime()) ? d : parsed.toISOString().split("T")[0];
+};
+
+const reviewsJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "NelliDESiGN",
+  description:
+    "Premium brochure design studio specialising in company profiles, product catalogues and corporate brochures.",
+  url: typeof window !== "undefined" ? window.location.origin : "https://nellidesign.com",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5.0",
+    reviewCount: items.length.toString(),
+    bestRating: "5",
+    worstRating: "1",
+  },
+  review: items.map((t) => ({
+    "@type": "Review",
+    author: { "@type": "Person", name: t.name },
+    datePublished: toIsoDate(t.date),
+    reviewBody: t.quote,
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: "5",
+      bestRating: "5",
+      worstRating: "1",
+    },
+    publisher: { "@type": "Organization", name: "Google" },
+  })),
+};
+
 export const Testimonials = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false });
   const [selected, setSelected] = useState(0);
@@ -96,6 +131,21 @@ export const Testimonials = () => {
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi]);
+
+  useEffect(() => {
+    const id = "ld-json-reviews";
+    let script = document.getElementById(id) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = id;
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(reviewsJsonLd);
+    return () => {
+      script?.remove();
+    };
+  }, []);
 
   return (
     <section className="py-24 md:py-32 bg-secondary/30">
