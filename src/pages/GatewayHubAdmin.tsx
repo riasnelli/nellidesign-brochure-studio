@@ -68,7 +68,7 @@ const Admin = () => {
   };
 
   const logout = () => {
-    clearToken();
+    clearSession();
     nav("/gatewayhub", { replace: true });
   };
 
