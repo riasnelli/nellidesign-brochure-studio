@@ -1,8 +1,30 @@
 import { Reveal } from "@/components/Reveal";
 import { ArrowUpRight } from "lucide-react";
-import { brochures } from "@/data/brochures";
+import { brochures as fallback } from "@/data/brochures";
+import { useEffect, useState } from "react";
 
-export const Projects = () => (
+type Brochure = {
+  title: string;
+  slug: string;
+  category: string;
+  thumbnail?: string;
+  pdf?: string;
+};
+
+export const Projects = () => {
+  const [brochures, setBrochures] = useState<Brochure[]>(fallback);
+
+  useEffect(() => {
+    // Try the dynamic list written by the admin panel; fall back silently.
+    fetch("/brochures/brochures.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length) setBrochures(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  return (
   <section id="work" className="py-24 md:py-32">
     <div className="container">
       <Reveal>
