@@ -1,24 +1,41 @@
 <?php
-// ---- EDIT THESE TWO LINES ----
-// 1) Set your admin email
-define('ADMIN_EMAIL', 'you@example.com');
-// 2) Set your admin password hash. Generate with PHP:
-//    php -r "echo password_hash('YourStrongPassword', PASSWORD_BCRYPT);"
-define('ADMIN_PASSWORD_HASH', '$2y$10$REPLACE_WITH_OUTPUT_OF_password_hash_CALL');
+// =====================================================================
+//  GatewayHub admin credentials
+// =====================================================================
+// Email
+define('ADMIN_EMAIL', 'hello@nellidesigns.com');
 
-// 3) Random 64+ char string. Generate with: php -r "echo bin2hex(random_bytes(32));"
-define('JWT_SECRET', 'replace-with-a-long-random-string-please-change-me');
+// Temporary password (CHANGE IT after first login by editing this file):
+//   Plain:  W95d&m#PmNXAGs*K
+// To rotate the password later, generate a new bcrypt hash with:
+//   php -r "echo password_hash('YourNewPassword', PASSWORD_BCRYPT);"
+define('ADMIN_PASSWORD_HASH', '$2y$12$wfvUbKeuKpuSic3aGj/c0OEkAh4VTTMR3M/h/k3fb2QRR5eO3UN56');
 
-// Path on the Hostinger server where uploaded files live and the JSON index is written.
-// Default: ../brochures relative to /api  ->  public_html/brochures
+// JWT signing secret. REPLACE this on Hostinger with a fresh random string:
+//   php -r "echo bin2hex(random_bytes(32));"
+define('JWT_SECRET', 'CHANGE-ME-on-hostinger-to-a-64char-random-hex-string-please-rotate');
+
+// Allowed Origin / Referer hosts for admin write requests.
+// Add your production hostnames here. Match is case-insensitive, host only.
+define('ALLOWED_ORIGINS', [
+  'nellidesigns.com',
+  'www.nellidesigns.com',
+  'localhost',
+  '127.0.0.1',
+]);
+
+// Filesystem locations for brochures + JSON index
 define('BROCHURES_DIR', __DIR__ . '/../brochures');
-define('BROCHURES_PUBLIC_PATH', '/brochures'); // URL prefix served by the web server
+define('BROCHURES_PUBLIC_PATH', '/brochures');
 define('BROCHURES_JSON', BROCHURES_DIR . '/brochures.json');
 
-// CORS — same origin in production, no headers required. Uncomment if you ever serve API on a different domain.
-// header('Access-Control-Allow-Origin: *');
-// header('Access-Control-Allow-Headers: Content-Type, Authorization');
-// header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-// if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+// Hardening: refuse to be loaded directly from a browser
+if (!defined('GATEWAYHUB_INTERNAL')) {
+  http_response_code(403);
+  exit('Forbidden');
+}
 
 header('Content-Type: application/json');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: no-referrer');
+header('X-Frame-Options: DENY');

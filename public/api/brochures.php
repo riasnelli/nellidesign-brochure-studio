@@ -1,17 +1,21 @@
 <?php
+define('GATEWAYHUB_INTERNAL', true);
 require_once __DIR__ . '/lib.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
-// Public read
+// Public read (no CSRF, no Origin check — list is public).
 if ($method === 'GET') {
   json_response(read_brochures());
 }
 
 if ($method !== 'POST') json_error('Method not allowed', 405);
 
-require_auth();
+// All write paths: same-origin + Bearer JWT + double-submit CSRF token.
+require_same_origin();
+$jwtPayload = require_auth();
+require_csrf($jwtPayload);
 
 function save_upload(string $field, string $destDir, array $allowedExt): ?string {
   if (empty($_FILES[$field]) || $_FILES[$field]['error'] === UPLOAD_ERR_NO_FILE) return null;
@@ -21,9 +25,7 @@ function save_upload(string $field, string $destDir, array $allowedExt): ?string
   $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
   if (!in_array($ext, $allowedExt, true)) json_error("$field: invalid file type");
   ensure_dir($destDir);
-  // Normalize names so the public site can find them
   $name = $field === 'pdf' ? "file.$ext" : "thumbnail.$ext";
-  // Remove existing thumbnails of other extensions to avoid stale files
   if ($field === 'thumbnail') {
     foreach (['jpg','jpeg','png','webp'] as $e) {
       $old = "$destDir/thumbnail.$e";
@@ -50,7 +52,6 @@ if ($action === 'reorder') {
     $s = safe_slug($s);
     if (isset($bySlug[$s])) { $next[] = $bySlug[$s]; unset($bySlug[$s]); }
   }
-  // Append any leftovers (shouldn't happen normally)
   foreach ($bySlug as $it) $next[] = $it;
   write_brochures($next);
   json_response(['ok' => true]);
@@ -71,7 +72,7 @@ if ($action === 'create') {
     'title' => $title,
     'category' => $category,
     'thumbnail' => BROCHURES_PUBLIC_PATH . "/$slug/$thumb",
-    'pdf' => BROCHURES_PUBLIC_PATH . "/$slug/" . ($pdf === 'file.pdf' ? 'file.pdf' : $pdf),
+    'pdf' => BROCHURES_PUBLIC_PATH . "/$slug/file.pdf",
   ];
   $items[] = $item;
   write_brochures($items);

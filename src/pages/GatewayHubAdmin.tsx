@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { api, Brochure, clearToken, getToken } from "@/lib/api";
+import { api, Brochure, clearSession, getToken } from "@/lib/api";
 import { brochures as fallbackBrochures } from "@/data/brochures";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, LogOut, Pencil, Plus, Trash2, X } from "lucide-react";
@@ -68,7 +68,7 @@ const Admin = () => {
   };
 
   const logout = () => {
-    clearToken();
+    clearSession();
     nav("/gatewayhub", { replace: true });
   };
 
