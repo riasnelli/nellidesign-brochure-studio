@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { api, getToken, setToken } from "@/lib/api";
+import { api, getToken, setSession } from "@/lib/api";
 import { toast } from "sonner";
 
 const GatewayHub = () => {
@@ -28,8 +28,8 @@ const GatewayHub = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { token } = await api.login(email.trim(), password);
-      setToken(token);
+      const { token, csrfToken } = await api.login(email.trim(), password);
+      setSession(token, csrfToken);
       toast.success("Welcome back");
       nav("/gatewayhub/admin", { replace: true });
     } catch (err) {
