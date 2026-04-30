@@ -1,15 +1,30 @@
-# Forward Authorization header to PHP (required on some Hostinger setups)
+# Forward Authorization + custom headers to PHP (Hostinger sometimes strips these)
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteCond %{HTTP:Authorization} ^(.*)
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
 </IfModule>
 
-# Allow PHP uploads up to 50MB (overridable from hPanel too)
+# Allow PHP uploads up to 50MB
 php_value upload_max_filesize 50M
 php_value post_max_size 55M
 
-# Block direct access to config + lib
+# Block direct browser access to internal files
 <FilesMatch "^(config|lib)\.php$">
   Require all denied
 </FilesMatch>
+
+# Block dotfiles, backups and includes
+<FilesMatch "^\.|\.(bak|old|orig|swp|inc|log)$">
+  Require all denied
+</FilesMatch>
+
+# No directory listings
+Options -Indexes
+
+# Defence-in-depth headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer"
+  Header set X-Frame-Options "DENY"
+</IfModule>
