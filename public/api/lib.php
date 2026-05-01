@@ -71,15 +71,21 @@ function require_same_origin(): void {
   $origin = get_header('Origin');
   $referer = get_header('Referer');
   $allowed = array_map('strtolower', ALLOWED_ORIGINS);
-  $okHost = function(string $h) use ($allowed): bool {
-    return $h !== '' && in_array($h, $allowed, true);
+  $suffixes = defined('ALLOWED_ORIGIN_SUFFIXES') ? array_map('strtolower', ALLOWED_ORIGIN_SUFFIXES) : [];
+  $okHost = function(string $h) use ($allowed, $suffixes): bool {
+    if ($h === '') return false;
+    if (in_array($h, $allowed, true)) return true;
+    foreach ($suffixes as $suf) {
+      if ($suf !== '' && substr($h, -strlen($suf)) === $suf) return true;
+    }
+    return false;
   };
-  // At least one of Origin / Referer must be present AND match the allowlist.
   $oh = $origin ? host_of($origin) : '';
   $rh = $referer ? host_of($referer) : '';
-  if (($oh === '' && $rh === '') || ($oh !== '' && !$okHost($oh)) || ($rh !== '' && !$okHost($rh))) {
-    json_error('Forbidden origin', 403);
-  }
+  // Need at least one of Origin/Referer; any present one must match.
+  if ($oh === '' && $rh === '') json_error('Forbidden origin', 403);
+  if ($oh !== '' && !$okHost($oh)) json_error('Forbidden origin', 403);
+  if ($rh !== '' && !$okHost($rh)) json_error('Forbidden origin', 403);
 }
 
 // ---- CSRF: double-submit token bound to the JWT ----
