@@ -17,11 +17,22 @@ define('JWT_SECRET', 'CHANGE-ME-on-hostinger-to-a-64char-random-hex-string-pleas
 
 // Allowed Origin / Referer hosts for admin write requests.
 // Add your production hostnames here. Match is case-insensitive, host only.
+// Exact hostnames allowed for admin writes/login.
 define('ALLOWED_ORIGINS', [
   'nellidesigns.com',
   'www.nellidesigns.com',
+  'brochuredesign.pro',
+  'www.brochuredesign.pro',
   'localhost',
   '127.0.0.1',
+]);
+
+// Wildcard suffix allowlist (host must end with one of these). Used for
+// Lovable preview/sandbox domains so the login form works inside the editor.
+define('ALLOWED_ORIGIN_SUFFIXES', [
+  '.lovable.app',
+  '.lovableproject.com',
+  '.lovable.dev',
 ]);
 
 // Filesystem locations for brochures + JSON index
