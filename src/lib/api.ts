@@ -38,9 +38,18 @@ async function request<T>(path: string, opts: RequestInit = {}): Promise<T> {
 
   const res = await fetch(`${API_BASE}${path}`, { ...opts, headers, credentials: "same-origin" });
 
-  // Auto-clear on auth failure so the user is bounced back to /gatewayhub
-  if (res.status === 401 || res.status === 403) {
+  // Auto-clear on auth failure so the user is bounced back to /gatewayhub.
+  // Only treat write requests as session-killers — a stale GET shouldn't
+  // boot you out, but a 401 on POST means the JWT expired or the secret
+  // was rotated on the server.
+  if ((res.status === 401 || res.status === 403) && isWrite) {
     clearSession();
+    if (typeof window !== "undefined" && !window.location.pathname.endsWith("/gatewayhub")) {
+      // Defer so the caller can still surface the error toast
+      setTimeout(() => {
+        window.location.href = "/gatewayhub?expired=1";
+      }, 1200);
+    }
   }
 
   if (!res.ok) {
@@ -49,6 +58,7 @@ async function request<T>(path: string, opts: RequestInit = {}): Promise<T> {
       const data = await res.json();
       if (data?.error) msg = data.error;
     } catch {}
+    if (res.status === 401) msg = "Session expired — please log in again.";
     throw new Error(msg);
   }
   if (res.status === 204) return undefined as T;
