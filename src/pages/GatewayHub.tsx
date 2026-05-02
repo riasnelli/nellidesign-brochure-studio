@@ -19,6 +19,9 @@ const GatewayHub = () => {
     meta.content = "noindex,nofollow";
     document.head.appendChild(meta);
     if (getToken()) nav("/gatewayhub/admin", { replace: true });
+    if (new URLSearchParams(window.location.search).get("expired") === "1") {
+      toast.error("Your session expired — please sign in again.");
+    }
     return () => {
       document.head.removeChild(meta);
     };
