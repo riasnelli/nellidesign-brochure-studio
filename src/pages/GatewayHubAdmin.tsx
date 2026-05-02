@@ -41,6 +41,8 @@ const Admin = () => {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [navPosition, setNavPosition] = useState<"top" | "bottom">("top");
+  const [savingNav, setSavingNav] = useState(false);
 
   useEffect(() => {
     document.title = "GatewayHub Admin — Portfolio";
@@ -49,7 +51,25 @@ const Admin = () => {
       return;
     }
     void load();
+    api.getSettings()
+      .then((s) => setNavPosition(s.navPosition === "bottom" ? "bottom" : "top"))
+      .catch(() => {/* ignore */});
   }, [nav]);
+
+  const updateNavPosition = async (pos: "top" | "bottom") => {
+    const prev = navPosition;
+    setNavPosition(pos);
+    setSavingNav(true);
+    try {
+      await api.updateSettings({ navPosition: pos });
+      toast.success(`Nav set to ${pos}`);
+    } catch (err) {
+      setNavPosition(prev);
+      toast.error(err instanceof Error ? err.message : "Could not save nav setting");
+    } finally {
+      setSavingNav(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
