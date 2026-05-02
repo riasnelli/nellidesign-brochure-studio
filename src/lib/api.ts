@@ -64,7 +64,14 @@ export type Brochure = {
   order?: number;
 };
 
+export type Settings = {
+  navPosition: "top" | "bottom";
+};
+
 export const api = {
+  getSettings: () => request<Settings>("/settings.php"),
+  updateSettings: (patch: Partial<Settings>) =>
+    request<Settings>("/settings.php", { method: "POST", body: JSON.stringify(patch) }),
   login: (email: string, password: string) =>
     request<{ token: string; csrfToken: string; expiresIn: number }>("/login.php", {
       method: "POST",
