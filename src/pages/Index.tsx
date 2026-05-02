@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/landing/Navbar";
+import { BottomNav } from "@/components/landing/BottomNav";
 import { Hero } from "@/components/landing/Hero";
 import { Projects } from "@/components/landing/Projects";
 import { WhyMe } from "@/components/landing/WhyMe";
@@ -10,7 +11,8 @@ import { Testimonials } from "@/components/landing/Testimonials";
 import { FAQ } from "@/components/landing/FAQ";
 import { Contact } from "@/components/landing/Contact";
 import { Footer } from "@/components/landing/Footer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 
 const Index = () => {
   useEffect(() => {
