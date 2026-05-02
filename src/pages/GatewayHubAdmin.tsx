@@ -191,6 +191,33 @@ const Admin = () => {
       </header>
 
       <section className="container py-10">
+        <Card className="p-6 mb-8">
+          <h2 className="font-display text-xl mb-1">Nav bar</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Choose where the main site navigation appears on the public landing page.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant={navPosition === "top" ? "default" : "outline"}
+              onClick={() => updateNavPosition("top")}
+              disabled={savingNav || navPosition === "top"}
+              className="rounded-full"
+            >
+              Top
+            </Button>
+            <Button
+              type="button"
+              variant={navPosition === "bottom" ? "default" : "outline"}
+              onClick={() => updateNavPosition("bottom")}
+              disabled={savingNav || navPosition === "bottom"}
+              className="rounded-full"
+            >
+              Bottom
+            </Button>
+          </div>
+        </Card>
+
         {showForm && (
           <Card className="p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
