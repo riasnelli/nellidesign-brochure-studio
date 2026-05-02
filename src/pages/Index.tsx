@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/landing/Navbar";
+import { BottomNav } from "@/components/landing/BottomNav";
 import { Hero } from "@/components/landing/Hero";
 import { Projects } from "@/components/landing/Projects";
 import { WhyMe } from "@/components/landing/WhyMe";
@@ -10,9 +11,18 @@ import { Testimonials } from "@/components/landing/Testimonials";
 import { FAQ } from "@/components/landing/FAQ";
 import { Contact } from "@/components/landing/Contact";
 import { Footer } from "@/components/landing/Footer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 
 const Index = () => {
+  const [navPosition, setNavPosition] = useState<"top" | "bottom">("top");
+
+  useEffect(() => {
+    api.getSettings()
+      .then((s) => setNavPosition(s.navPosition === "bottom" ? "bottom" : "top"))
+      .catch(() => {/* keep default */});
+  }, []);
+
   useEffect(() => {
     document.title = "NelliDESiGN — Premium Brochure Design | Company Profiles, Catalogues, Corporate";
     const setMeta = (name: string, content: string) => {
@@ -56,8 +66,8 @@ const Index = () => {
 
   return (
     <main>
-      <Navbar />
-      <Hero />
+      {navPosition === "top" && <Navbar />}
+      <Hero compact={navPosition === "bottom"} />
       <Projects />
       <WhyMe />
       <Services />
@@ -68,6 +78,7 @@ const Index = () => {
       <FAQ />
       <Contact />
       <Footer />
+      {navPosition === "bottom" && <BottomNav />}
     </main>
   );
 };

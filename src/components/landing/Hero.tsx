@@ -3,9 +3,16 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import heroImg from "@/assets/hero-brochures.jpg";
 import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
-export const Hero = () => {
+export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
   return (
-    <section id="top" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+    <section
+      id="top"
+      className={
+        compact
+          ? "relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden"
+          : "relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden"
+      }
+    >
       <div className="absolute inset-0 bg-gradient-warm opacity-60" aria-hidden />
       <div className="absolute inset-0 bg-gradient-soft" aria-hidden />
       <div className="container relative">
