@@ -24,13 +24,21 @@ public_html/
 
 ## Safe-deploy checklist
 
-When you upload a new build to Hostinger:
+Secrets now live in `public_html/api/secrets.php` (server-only, NOT in the
+repo or build). `api/config.php` is safe to overwrite on every deploy.
+
+One-time setup on Hostinger:
+
+1. Copy `public/api/secrets.example.php` → `public_html/api/secrets.php`.
+2. Edit it and fill in: `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` (bcrypt),
+   and `JWT_SECRET` (64 random hex chars).
+3. (Optional alternative) Set env vars in hPanel instead:
+   `GATEWAYHUB_ADMIN_EMAIL`, `GATEWAYHUB_ADMIN_PASSWORD_HASH`,
+   `GATEWAYHUB_JWT_SECRET`. Env vars override constants.
+
+On every redeploy:
 
 1. Build locally (`npm run build`).
-2. Upload the contents of `dist/` to `public_html/`, **excluding**:
-   - `brochures/`  (live data — never overwrite)
-   - `api/config.php`  (contains your real password hash + JWT secret)
-3. If `api/` files changed, upload only the changed ones — never overwrite
-   `config.php`.
-
-If you use FTP, set the sync rule to skip `brochures/` and `api/config.php`.
+2. Upload `dist/` to `public_html/`, excluding `brochures/` (live data).
+3. `api/config.php` is now generic and safe to overwrite.
+4. `api/secrets.php` is never in the build, so it survives every deploy.

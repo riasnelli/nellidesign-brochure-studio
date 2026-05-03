@@ -1,23 +1,56 @@
 <?php
 // =====================================================================
-//  GatewayHub admin credentials
+//  GatewayHub configuration (NO SECRETS IN THIS FILE)
 // =====================================================================
-// Email
-define('ADMIN_EMAIL', 'hello@nellidesigns.com');
+// This file is safe to overwrite on every deploy. All secrets are loaded
+// from environment variables, with a fallback to /api/secrets.php which
+// lives ONLY on the server (never in the repo, never in the build).
+//
+// On Hostinger, set secrets via either:
+//   1. hPanel → Advanced → PHP Configuration → Environment variables, OR
+//   2. Create public_html/api/secrets.php from secrets.example.php
+//      (recommended — survives every redeploy because it is not in dist/)
+// =====================================================================
 
-// Temporary password (CHANGE IT after first login by editing this file):
-//   Plain:  $iPhone4223$
-// To rotate the password later, generate a new bcrypt hash with:
-//   php -r "echo password_hash('YourNewPassword', PASSWORD_BCRYPT);"
-define('ADMIN_PASSWORD_HASH', '$2y$12$s5BV98uCBLiankigsy/R8OJsklrqWoVinoJ5X3Z2eShH6XlxXpjwG');
+// Hardening: refuse to be loaded directly from a browser
+if (!defined('GATEWAYHUB_INTERNAL')) {
+  http_response_code(403);
+  exit('Forbidden');
+}
 
-// JWT signing secret. REPLACE this on Hostinger with a fresh random string:
-//   php -r "echo bin2hex(random_bytes(32));"
-define('JWT_SECRET', 'CHANGE-ME-on-hostinger-to-a-64char-random-hex-string-please-rotate');
+// ---- Load secrets from server-only file (never shipped in build) ----
+$__secretsFile = __DIR__ . '/secrets.php';
+if (is_file($__secretsFile)) {
+  require_once $__secretsFile;
+}
 
-// Allowed Origin / Referer hosts for admin write requests.
-// Add your production hostnames here. Match is case-insensitive, host only.
-// Exact hostnames allowed for admin writes/login.
+// ---- Resolve secrets: env var first, then secrets.php constant ----
+$__env = function (string $name, ?string $default = null): ?string {
+  $v = getenv($name);
+  if ($v !== false && $v !== '') return $v;
+  return $default;
+};
+
+if (!defined('ADMIN_EMAIL')) {
+  define('ADMIN_EMAIL', $__env('GATEWAYHUB_ADMIN_EMAIL', ''));
+}
+if (!defined('ADMIN_PASSWORD_HASH')) {
+  define('ADMIN_PASSWORD_HASH', $__env('GATEWAYHUB_ADMIN_PASSWORD_HASH', ''));
+}
+if (!defined('JWT_SECRET')) {
+  define('JWT_SECRET', $__env('GATEWAYHUB_JWT_SECRET', ''));
+}
+
+// Fail closed if anything critical is missing — better a clear error than
+// a silently insecure deploy.
+if (ADMIN_EMAIL === '' || ADMIN_PASSWORD_HASH === '' || JWT_SECRET === '' || JWT_SECRET === 'CHANGE-ME') {
+  http_response_code(500);
+  header('Content-Type: application/json');
+  echo json_encode(['error' => 'Server not configured: missing GATEWAYHUB_* secrets. See public/api/secrets.example.php.']);
+  exit;
+}
+
+// ---- Non-secret config (safe in repo) ----
 define('ALLOWED_ORIGINS', [
   'nellidesigns.com',
   'www.nellidesigns.com',
@@ -27,24 +60,15 @@ define('ALLOWED_ORIGINS', [
   '127.0.0.1',
 ]);
 
-// Wildcard suffix allowlist (host must end with one of these). Used for
-// Lovable preview/sandbox domains so the login form works inside the editor.
 define('ALLOWED_ORIGIN_SUFFIXES', [
   '.lovable.app',
   '.lovableproject.com',
   '.lovable.dev',
 ]);
 
-// Filesystem locations for brochures + JSON index
 define('BROCHURES_DIR', __DIR__ . '/../brochures');
 define('BROCHURES_PUBLIC_PATH', '/brochures');
 define('BROCHURES_JSON', BROCHURES_DIR . '/brochures.json');
-
-// Hardening: refuse to be loaded directly from a browser
-if (!defined('GATEWAYHUB_INTERNAL')) {
-  http_response_code(403);
-  exit('Forbidden');
-}
 
 header('Content-Type: application/json');
 header('X-Content-Type-Options: nosniff');
