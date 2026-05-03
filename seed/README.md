@@ -42,3 +42,31 @@ On every redeploy:
 2. Upload `dist/` to `public_html/`, excluding `brochures/` (live data).
 3. `api/config.php` is now generic and safe to overwrite.
 4. `api/secrets.php` is never in the build, so it survives every deploy.
+
+## Auto-deploy from GitHub → Hostinger
+
+A GitHub Actions workflow (`.github/workflows/deploy-hostinger.yml`) builds
+the app and FTP-uploads `dist/` to Hostinger on every push to `main`.
+Server-only paths (`brochures/`, `api/secrets.php`) are excluded so live
+data and credentials are never overwritten.
+
+### One-time GitHub setup
+
+In your GitHub repo: **Settings → Secrets and variables → Actions → New repository secret**.
+Add these four secrets:
+
+| Secret | Value | Where to find it (hPanel) |
+|---|---|---|
+| `HOSTINGER_FTP_HOST` | e.g. `ftp.nellidesigns.com` | Files → FTP Accounts → Hostname |
+| `HOSTINGER_FTP_USER` | e.g. `u123456789` | Files → FTP Accounts → Username |
+| `HOSTINGER_FTP_PASSWORD` | your FTP password | Files → FTP Accounts (reset if unknown) |
+| `HOSTINGER_FTP_DIR` | `/public_html/` | Trailing slash required |
+
+That's it. Push to `main` → GitHub Actions builds → uploads to Hostinger →
+live in ~2 minutes. Watch progress under the repo's **Actions** tab.
+
+### What is NEVER touched by auto-deploy
+
+- `public_html/brochures/` — your live brochures and `brochures.json`
+- `public_html/api/secrets.php` — admin password hash + JWT secret
+  (also in `.gitignore`, so it can't accidentally land in the repo)
