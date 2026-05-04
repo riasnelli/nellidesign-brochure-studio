@@ -68,5 +68,14 @@ live in ~2 minutes. Watch progress under the repo's **Actions** tab.
 ### What is NEVER touched by auto-deploy
 
 - `public_html/brochures/` — your live brochures and `brochures.json`
+  (everything you add via the admin panel lives here and is preserved
+  across every deploy)
 - `public_html/api/secrets.php` — admin password hash + JWT secret
   (also in `.gitignore`, so it can't accidentally land in the repo)
+
+### If admin-added brochures ever disappear after a deploy
+
+It means the FTP exclude patterns didn't match. Verify in hPanel that
+`public_html/brochures/` still exists and contains your slugs. If it was
+wiped, restore from Hostinger's daily backup (Files → Backups), then
+re-run the failed Actions job — the hardened excludes prevent recurrence.
