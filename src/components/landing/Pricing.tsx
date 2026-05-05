@@ -144,7 +144,7 @@ export const Pricing = () => (
 
       <Reveal>
         <div className="mt-20">
-          <div className="max-w-2xl mb-10">
+          <div className="max-w-2xl mx-auto text-center mb-10">
             <p className="text-xs uppercase tracking-[0.2em] text-accent font-medium mb-4">How It Works</p>
             <h3 className="text-3xl md:text-4xl font-display font-medium text-balance">
               Four simple steps from brief to delivery.
