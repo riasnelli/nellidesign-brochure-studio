@@ -63,10 +63,10 @@ const plans = [
 ];
 
 const steps = [
-  { n: "1", title: "Share your requirement" },
-  { n: "2", title: "Get a free sample page" },
-  { n: "3", title: "Approve & pay upfront to begin" },
-  { n: "4", title: "Final delivery after completion & balance payment" },
+  { n: "1", title: "Share Requirement", desc: "Tell us about your project", Icon: FileText },
+  { n: "2", title: "Free Sample Page", desc: "Preview the design direction", Icon: Sparkles },
+  { n: "3", title: "Approve & Pay", desc: "Confirm with upfront payment", Icon: CheckCircle2 },
+  { n: "4", title: "Final Delivery", desc: "Receive files on balance payment", Icon: PackageCheck },
 ];
 
 export const Pricing = () => (
