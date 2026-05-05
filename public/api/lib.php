@@ -141,6 +141,7 @@ function migrate_legacy_brochures(): void {
 
 // ---- brochures.json read/write ----
 function read_brochures(): array {
+  migrate_legacy_brochures();
   if (!file_exists(BROCHURES_JSON)) {
     $items = [];
     if (is_dir(BROCHURES_DIR)) {
@@ -157,8 +158,8 @@ function read_brochures(): array {
           'slug' => $entry,
           'title' => ucwords(str_replace('-', ' ', $entry)),
           'category' => 'Brochure',
-          'thumbnail' => BROCHURES_PUBLIC_PATH . "/$entry/$thumb",
-          'pdf' => BROCHURES_PUBLIC_PATH . "/$entry/file.pdf",
+          'thumbnail' => "/api/file.php?slug=$entry&file=$thumb",
+          'pdf' => "/api/file.php?slug=$entry&file=file.pdf",
           'order' => count($items),
         ];
       }
@@ -171,6 +172,7 @@ function read_brochures(): array {
 }
 
 function write_brochures(array $items): void {
+  migrate_legacy_brochures();
   ensure_dir(BROCHURES_DIR);
   $i = 0;
   foreach ($items as &$it) { $it['order'] = $i++; }
