@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Reveal } from "@/components/Reveal";
 import { MessageCircle, Send } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 
@@ -71,6 +71,42 @@ export const Contact = () => {
     project: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const applyPlan = (plan: string) => {
+      if (!plan) return;
+      setForm((prev) => {
+        const planLine = `Selected plan: ${plan}`;
+        const already = prev.project.includes("Selected plan:");
+        const nextProject = already
+          ? prev.project.replace(/Selected plan: .*/m, planLine)
+          : (prev.project ? `${planLine}\n\n${prev.project}` : `${planLine}\n\n`);
+        return {
+          ...prev,
+          brochureType: prev.brochureType || `${plan} package`,
+          project: nextProject,
+        };
+      });
+      setTimeout(() => {
+        document.getElementById("project")?.focus({ preventScroll: true });
+      }, 600);
+    };
+
+    try {
+      const stored = sessionStorage.getItem("selectedPlan");
+      if (stored) {
+        applyPlan(stored);
+        sessionStorage.removeItem("selectedPlan");
+      }
+    } catch {}
+
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ plan: string }>).detail;
+      if (detail?.plan) applyPlan(detail.plan);
+    };
+    window.addEventListener("plan:selected", handler);
+    return () => window.removeEventListener("plan:selected", handler);
+  }, []);
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
