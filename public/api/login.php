@@ -2,6 +2,8 @@
 define('GATEWAYHUB_INTERNAL', true);
 require_once __DIR__ . '/lib.php';
 
+require_gatewayhub_secrets();
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') json_error('Method not allowed', 405);
 require_same_origin();
 

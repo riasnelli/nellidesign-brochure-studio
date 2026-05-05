@@ -55,6 +55,7 @@ function get_header(string $name): string {
 }
 
 function require_auth(): array {
+  require_gatewayhub_secrets();
   $hdr = get_header('Authorization');
   if (!preg_match('/Bearer\s+(.+)/', $hdr, $m)) json_error('Unauthorized', 401);
   $payload = jwt_verify(trim($m[1]));
@@ -95,6 +96,7 @@ function csrf_for(string $jti): string {
   return b64url(hash_hmac('sha256', 'csrf:' . $jti, JWT_SECRET, true));
 }
 function require_csrf(array $jwtPayload): void {
+  require_gatewayhub_secrets();
   $jti = $jwtPayload['jti'] ?? '';
   if (!$jti) json_error('CSRF token missing (no jti)', 403);
   $sent = trim(get_header('X-CSRF-Token'));
@@ -115,8 +117,53 @@ function ensure_dir(string $path) {
   if (!is_dir($path)) mkdir($path, 0755, true);
 }
 
+function migrate_legacy_brochures(): void {
+  if (file_exists(BROCHURES_JSON)) return;
+  if (!defined('LEGACY_BROCHURES_DIR') || !is_dir(LEGACY_BROCHURES_DIR)) return;
+  ensure_dir(BROCHURES_DIR);
+
+  foreach (scandir(LEGACY_BROCHURES_DIR) as $entry) {
+    if ($entry === '.' || $entry === '..') continue;
+    $src = LEGACY_BROCHURES_DIR . '/' . $entry;
+    $dest = BROCHURES_DIR . '/' . $entry;
+
+    if (is_dir($src)) {
+      ensure_dir($dest);
+      foreach (scandir($src) as $file) {
+        if ($file === '.' || $file === '..') continue;
+        if (is_file("$src/$file") && !file_exists("$dest/$file")) @copy("$src/$file", "$dest/$file");
+      }
+    } elseif (is_file($src) && !file_exists($dest)) {
+      @copy($src, $dest);
+    }
+  }
+}
+
+function brochure_file_url(string $slug, string $file): string {
+  return '/api/file.php?slug=' . rawurlencode($slug) . '&file=' . rawurlencode($file);
+}
+
+function normalize_brochure_item(array $it): array {
+  $slug = safe_slug($it['slug'] ?? '');
+  if (!$slug) return $it;
+
+  $thumb = basename($it['thumbnail'] ?? '');
+  if (!preg_match('/^thumbnail\.(jpe?g|png|webp)$/i', $thumb)) {
+    $thumb = 'thumbnail.jpg';
+    foreach (['thumbnail.jpg', 'thumbnail.jpeg', 'thumbnail.png', 'thumbnail.webp'] as $candidate) {
+      if (file_exists(BROCHURES_DIR . "/$slug/$candidate")) { $thumb = $candidate; break; }
+    }
+  }
+
+  $it['slug'] = $slug;
+  $it['thumbnail'] = brochure_file_url($slug, $thumb);
+  $it['pdf'] = brochure_file_url($slug, 'file.pdf');
+  return $it;
+}
+
 // ---- brochures.json read/write ----
 function read_brochures(): array {
+  migrate_legacy_brochures();
   if (!file_exists(BROCHURES_JSON)) {
     $items = [];
     if (is_dir(BROCHURES_DIR)) {
@@ -129,27 +176,28 @@ function read_brochures(): array {
           if (file_exists("$dir/$t")) { $thumb = $t; break; }
         }
         if (!$thumb) continue;
-        $items[] = [
+        $items[] = normalize_brochure_item([
           'slug' => $entry,
           'title' => ucwords(str_replace('-', ' ', $entry)),
           'category' => 'Brochure',
-          'thumbnail' => BROCHURES_PUBLIC_PATH . "/$entry/$thumb",
-          'pdf' => BROCHURES_PUBLIC_PATH . "/$entry/file.pdf",
+          'thumbnail' => brochure_file_url($entry, $thumb),
+          'pdf' => brochure_file_url($entry, 'file.pdf'),
           'order' => count($items),
-        ];
+        ]);
       }
     }
     return $items;
   }
   $raw = file_get_contents(BROCHURES_JSON);
   $data = json_decode($raw, true);
-  return is_array($data) ? $data : [];
+  return is_array($data) ? array_map('normalize_brochure_item', $data) : [];
 }
 
 function write_brochures(array $items): void {
+  migrate_legacy_brochures();
   ensure_dir(BROCHURES_DIR);
   $i = 0;
-  foreach ($items as &$it) { $it['order'] = $i++; }
+  foreach ($items as &$it) { $it = normalize_brochure_item($it); $it['order'] = $i++; }
   file_put_contents(BROCHURES_JSON, json_encode(array_values($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
 

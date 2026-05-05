@@ -15,8 +15,8 @@ then never touch them again — the admin panel manages everything from there.
 ```
 public_html/
   brochures/
-    brochures.json        <-- written by the admin panel
-    settings.json         <-- written by the admin panel (nav position)
+    brochures.json        <-- legacy location; migrated automatically
+    settings.json         <-- legacy location; migrated automatically
     <slug>/
       thumbnail.jpg
       file.pdf
@@ -39,7 +39,7 @@ One-time setup on Hostinger:
 On every redeploy:
 
 1. Build locally (`npm run build`).
-2. Upload `dist/` to `public_html/`, excluding `brochures/` (live data).
+2. Upload `dist/` to `public_html/`. Live uploads are stored outside `public_html` in `gatewayhub-data/brochures/`, so deploys cannot wipe them.
 3. `api/config.php` is now generic and safe to overwrite.
 4. `api/secrets.php` is never in the build, so it survives every deploy.
 
@@ -67,7 +67,7 @@ live in ~2 minutes. Watch progress under the repo's **Actions** tab.
 
 ### What is NEVER touched by auto-deploy
 
-- `public_html/brochures/` — your live brochures and `brochures.json`
+- `gatewayhub-data/brochures/` — your live brochures and `brochures.json`
   (everything you add via the admin panel lives here and is preserved
   across every deploy)
 - `public_html/api/secrets.php` — admin password hash + JWT secret

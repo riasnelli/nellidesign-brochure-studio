@@ -1,6 +1,6 @@
 # GatewayHub — PHP backend for Hostinger
 
-Ships inside the Vite build. After `npm run build`, copy `dist/*` into `public_html/` on Hostinger. The `api/` folder lands at `public_html/api/` and brochures at `public_html/brochures/`.
+Ships inside the Vite build. After `npm run build`, copy `dist/*` into `public_html/` on Hostinger. The `api/` folder lands at `public_html/api/`; uploaded brochures are stored in `gatewayhub-data/brochures/` outside `public_html` so deploys cannot delete them.
 
 ## Pre-set credentials (CHANGE on first login)
 
@@ -23,7 +23,7 @@ Paste the output into `ADMIN_PASSWORD_HASH` in `public_html/api/config.php`.
    ```
 2. **Add your domain** to `ALLOWED_ORIGINS` in `config.php` if it's not already there.
 3. **Enable free SSL** in hPanel — the JWT lives in `localStorage` and must travel only over HTTPS.
-4. Make sure `public_html/brochures/` is writable (chmod 755). The API will create it on first upload if missing.
+4. Make sure the hosting account root is writable enough for PHP to create `gatewayhub-data/brochures/` beside `public_html` (or set `GATEWAYHUB_DATA_ROOT` to a writable private folder).
 
 ## Security hardening summary
 
@@ -46,6 +46,7 @@ Paste the output into `ADMIN_PASSWORD_HASH` in `public_html/api/config.php`.
 |---|---|---|---|
 | POST | `/api/login.php` | — | `{ email, password }` → `{ token, csrfToken, expiresIn }` |
 | GET | `/api/brochures.php` | — | Public list |
+| GET | `/api/file.php?slug=...&file=...` | — | Serves protected brochure thumbnails/PDFs |
 | POST | `/api/brochures.php?action=create` | Bearer + `X-CSRF-Token` | multipart |
 | POST | `/api/brochures.php?action=update&slug=...` | Bearer + `X-CSRF-Token` | multipart |
 | POST | `/api/brochures.php?action=delete&slug=...` | Bearer + `X-CSRF-Token` | — |

@@ -15,8 +15,8 @@ export const Projects = () => {
   const [brochures, setBrochures] = useState<Brochure[]>(fallback);
 
   useEffect(() => {
-    // Try the dynamic list written by the admin panel; fall back silently.
-    fetch("/brochures/brochures.json", { cache: "no-store" })
+    // Load the live admin-managed portfolio list; fall back silently.
+    fetch("/api/brochures.php", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (Array.isArray(data) && data.length) setBrochures(data);

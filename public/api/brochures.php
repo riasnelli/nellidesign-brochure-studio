@@ -71,8 +71,8 @@ if ($action === 'create') {
     'slug' => $slug,
     'title' => $title,
     'category' => $category,
-    'thumbnail' => BROCHURES_PUBLIC_PATH . "/$slug/$thumb",
-    'pdf' => BROCHURES_PUBLIC_PATH . "/$slug/file.pdf",
+    'thumbnail' => "/api/file.php?slug=$slug&file=$thumb",
+    'pdf' => "/api/file.php?slug=$slug&file=file.pdf",
   ];
   $items[] = $item;
   write_brochures($items);
@@ -90,9 +90,9 @@ if ($action === 'update') {
   if ($title) $items[$i]['title'] = $title;
   if ($category) $items[$i]['category'] = $category;
   $thumb = save_upload('thumbnail', $dir, ['jpg', 'jpeg', 'png', 'webp']);
-  if ($thumb) $items[$i]['thumbnail'] = BROCHURES_PUBLIC_PATH . "/$target/$thumb";
+  if ($thumb) $items[$i]['thumbnail'] = "/api/file.php?slug=$target&file=$thumb";
   $pdf = save_upload('pdf', $dir, ['pdf']);
-  if ($pdf) $items[$i]['pdf'] = BROCHURES_PUBLIC_PATH . "/$target/$pdf";
+  if ($pdf) $items[$i]['pdf'] = "/api/file.php?slug=$target&file=$pdf";
   write_brochures($items);
   json_response($items[$i]);
 }

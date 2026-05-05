@@ -2,9 +2,10 @@
 define('GATEWAYHUB_INTERNAL', true);
 require_once __DIR__ . '/lib.php';
 
-$SETTINGS_FILE = __DIR__ . '/../brochures/settings.json';
+$SETTINGS_FILE = BROCHURES_SETTINGS_JSON;
 
 function read_settings(string $file): array {
+  migrate_legacy_brochures();
   $defaults = ['navPosition' => 'top'];
   if (!file_exists($file)) return $defaults;
   $raw = file_get_contents($file);
