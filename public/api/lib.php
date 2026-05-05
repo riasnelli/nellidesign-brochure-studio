@@ -139,6 +139,28 @@ function migrate_legacy_brochures(): void {
   }
 }
 
+function brochure_file_url(string $slug, string $file): string {
+  return '/api/file.php?slug=' . rawurlencode($slug) . '&file=' . rawurlencode($file);
+}
+
+function normalize_brochure_item(array $it): array {
+  $slug = safe_slug($it['slug'] ?? '');
+  if (!$slug) return $it;
+
+  $thumb = basename($it['thumbnail'] ?? '');
+  if (!preg_match('/^thumbnail\.(jpe?g|png|webp)$/i', $thumb)) {
+    $thumb = 'thumbnail.jpg';
+    foreach (['thumbnail.jpg', 'thumbnail.jpeg', 'thumbnail.png', 'thumbnail.webp'] as $candidate) {
+      if (file_exists(BROCHURES_DIR . "/$slug/$candidate")) { $thumb = $candidate; break; }
+    }
+  }
+
+  $it['slug'] = $slug;
+  $it['thumbnail'] = brochure_file_url($slug, $thumb);
+  $it['pdf'] = brochure_file_url($slug, 'file.pdf');
+  return $it;
+}
+
 // ---- brochures.json read/write ----
 function read_brochures(): array {
   migrate_legacy_brochures();
