@@ -1,7 +1,7 @@
 name: Deploy to Hostinger
 
 # Auto-builds the Vite app on every push to main and FTP-uploads dist/
-# to Hostinger's public_html. Server-only files (brochures/, api/secrets.php)
+# to Hostinger's public_html. Server-only files (gatewayhub-data/, brochures/, api/secrets.php)
 # are excluded so live data and credentials are never overwritten.
 
 on:
@@ -44,6 +44,8 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/gatewayhub-data/**
+            gatewayhub-data/**
             **/brochures/**
             brochures/**
             **/api/secrets.php
