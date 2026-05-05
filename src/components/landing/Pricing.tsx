@@ -120,11 +120,22 @@ export const Pricing = () => (
                 <span className="font-medium text-foreground">Best for:</span> {p.best}
               </p>
               <Button
-                asChild
+                type="button"
                 className="w-full rounded-full"
                 variant={p.highlight ? "default" : "outline"}
+                onClick={() => {
+                  try {
+                    sessionStorage.setItem("selectedPlan", p.name);
+                  } catch {}
+                  window.dispatchEvent(
+                    new CustomEvent("plan:selected", { detail: { plan: p.name } })
+                  );
+                  const el = document.getElementById("contact");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  else window.location.hash = "#contact";
+                }}
               >
-                <a href="#contact">{p.cta}</a>
+                {p.cta}
               </Button>
             </article>
           </Reveal>
