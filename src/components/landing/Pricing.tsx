@@ -150,16 +150,27 @@ export const Pricing = () => (
               Four simple steps from brief to delivery.
             </h3>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {steps.map((s) => (
-              <div
-                key={s.n}
-                className="rounded-2xl bg-card border border-border/60 p-6 shadow-soft"
-              >
-                <div className="w-10 h-10 rounded-full bg-accent/10 text-accent font-display font-medium flex items-center justify-center mb-4">
-                  {s.n}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10 relative">
+            {steps.map((s, i) => (
+              <div key={s.n} className="relative flex flex-col items-center text-center">
+                <div className="relative mb-5">
+                  <div className="w-16 h-16 rounded-full bg-accent/10 text-accent flex items-center justify-center ring-1 ring-accent/20">
+                    <s.Icon size={26} strokeWidth={1.75} />
+                  </div>
+                  <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-accent text-accent-foreground text-[11px] font-medium flex items-center justify-center shadow-soft">
+                    {s.n}
+                  </span>
                 </div>
-                <p className="text-sm font-medium leading-relaxed">{s.title}</p>
+                <p className="text-sm font-medium">{s.title}</p>
+                <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed max-w-[180px]">
+                  {s.desc}
+                </p>
+                {i < steps.length - 1 && (
+                  <span
+                    aria-hidden
+                    className="hidden lg:block absolute top-8 left-[calc(50%+2rem)] right-[calc(-50%+2rem)] h-px border-t border-dashed border-border"
+                  />
+                )}
               </div>
             ))}
           </div>
