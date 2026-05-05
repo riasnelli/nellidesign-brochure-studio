@@ -75,6 +75,7 @@ const Index = () => {
       <Process />
       <About />
       <Tools />
+      <Pricing />
       <Testimonials />
       <FAQ />
       <Contact />
