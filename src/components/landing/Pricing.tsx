@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, FileText, Sparkles, CheckCircle2, PackageCheck } from "lucide-react";
 
 const plans = [
   {
