@@ -55,6 +55,7 @@ function get_header(string $name): string {
 }
 
 function require_auth(): array {
+  require_gatewayhub_secrets();
   $hdr = get_header('Authorization');
   if (!preg_match('/Bearer\s+(.+)/', $hdr, $m)) json_error('Unauthorized', 401);
   $payload = jwt_verify(trim($m[1]));
@@ -95,6 +96,7 @@ function csrf_for(string $jti): string {
   return b64url(hash_hmac('sha256', 'csrf:' . $jti, JWT_SECRET, true));
 }
 function require_csrf(array $jwtPayload): void {
+  require_gatewayhub_secrets();
   $jti = $jwtPayload['jti'] ?? '';
   if (!$jti) json_error('CSRF token missing (no jti)', 403);
   $sent = trim(get_header('X-CSRF-Token'));
@@ -113,6 +115,28 @@ function safe_slug(string $s): string {
 
 function ensure_dir(string $path) {
   if (!is_dir($path)) mkdir($path, 0755, true);
+}
+
+function migrate_legacy_brochures(): void {
+  if (file_exists(BROCHURES_JSON)) return;
+  if (!defined('LEGACY_BROCHURES_DIR') || !is_dir(LEGACY_BROCHURES_DIR)) return;
+  ensure_dir(BROCHURES_DIR);
+
+  foreach (scandir(LEGACY_BROCHURES_DIR) as $entry) {
+    if ($entry === '.' || $entry === '..') continue;
+    $src = LEGACY_BROCHURES_DIR . '/' . $entry;
+    $dest = BROCHURES_DIR . '/' . $entry;
+
+    if (is_dir($src)) {
+      ensure_dir($dest);
+      foreach (scandir($src) as $file) {
+        if ($file === '.' || $file === '..') continue;
+        if (is_file("$src/$file") && !file_exists("$dest/$file")) @copy("$src/$file", "$dest/$file");
+      }
+    } elseif (is_file($src) && !file_exists($dest)) {
+      @copy($src, $dest);
+    }
+  }
 }
 
 // ---- brochures.json read/write ----
