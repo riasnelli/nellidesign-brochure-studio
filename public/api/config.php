@@ -41,9 +41,12 @@ if (!defined('JWT_SECRET')) {
   define('JWT_SECRET', $__env('GATEWAYHUB_JWT_SECRET', ''));
 }
 
-// Fail closed if anything critical is missing — better a clear error than
-// a silently insecure deploy.
-if (ADMIN_EMAIL === '' || ADMIN_PASSWORD_HASH === '' || JWT_SECRET === '' || JWT_SECRET === 'CHANGE-ME') {
+function gatewayhub_secrets_ready(): bool {
+  return ADMIN_EMAIL !== '' && ADMIN_PASSWORD_HASH !== '' && JWT_SECRET !== '' && JWT_SECRET !== 'CHANGE-ME';
+}
+
+function require_gatewayhub_secrets(): void {
+  if (gatewayhub_secrets_ready()) return;
   http_response_code(500);
   header('Content-Type: application/json');
   echo json_encode(['error' => 'Server not configured: missing GATEWAYHUB_* secrets. See public/api/secrets.example.php.']);
@@ -66,9 +69,14 @@ define('ALLOWED_ORIGIN_SUFFIXES', [
   '.lovable.dev',
 ]);
 
-define('BROCHURES_DIR', __DIR__ . '/../brochures');
-define('BROCHURES_PUBLIC_PATH', '/brochures');
+// Store admin-managed portfolio files outside public_html so deploy syncs
+// can never delete them. Override with GATEWAYHUB_DATA_ROOT if needed.
+$__dataRoot = $__env('GATEWAYHUB_DATA_ROOT', dirname(__DIR__, 2) . '/gatewayhub-data');
+define('GATEWAYHUB_DATA_ROOT', rtrim($__dataRoot, '/'));
+define('BROCHURES_DIR', GATEWAYHUB_DATA_ROOT . '/brochures');
+define('LEGACY_BROCHURES_DIR', __DIR__ . '/../brochures');
 define('BROCHURES_JSON', BROCHURES_DIR . '/brochures.json');
+define('BROCHURES_SETTINGS_JSON', BROCHURES_DIR . '/settings.json');
 
 header('Content-Type: application/json');
 header('X-Content-Type-Options: nosniff');
