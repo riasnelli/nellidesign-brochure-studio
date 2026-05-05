@@ -176,28 +176,28 @@ function read_brochures(): array {
           if (file_exists("$dir/$t")) { $thumb = $t; break; }
         }
         if (!$thumb) continue;
-        $items[] = [
+        $items[] = normalize_brochure_item([
           'slug' => $entry,
           'title' => ucwords(str_replace('-', ' ', $entry)),
           'category' => 'Brochure',
-          'thumbnail' => "/api/file.php?slug=$entry&file=$thumb",
-          'pdf' => "/api/file.php?slug=$entry&file=file.pdf",
+          'thumbnail' => brochure_file_url($entry, $thumb),
+          'pdf' => brochure_file_url($entry, 'file.pdf'),
           'order' => count($items),
-        ];
+        ]);
       }
     }
     return $items;
   }
   $raw = file_get_contents(BROCHURES_JSON);
   $data = json_decode($raw, true);
-  return is_array($data) ? $data : [];
+  return is_array($data) ? array_map('normalize_brochure_item', $data) : [];
 }
 
 function write_brochures(array $items): void {
   migrate_legacy_brochures();
   ensure_dir(BROCHURES_DIR);
   $i = 0;
-  foreach ($items as &$it) { $it['order'] = $i++; }
+  foreach ($items as &$it) { $it = normalize_brochure_item($it); $it['order'] = $i++; }
   file_put_contents(BROCHURES_JSON, json_encode(array_values($items), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
 
