@@ -20,15 +20,16 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
           <div className="fade-up flex flex-wrap items-center justify-center gap-2.5 mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border/60 shadow-soft text-xs font-medium text-muted-foreground">
               <Sparkles size={14} className="text-accent" />
-              Trusted brochure design since 2009 · 15+ years
+              Trusted Brochure Design Expert Since 2009 · 15+ years
             </div>
             <GoogleReviewBadge />
           </div>
           <h1 className="fade-up fade-up-delay-1 font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
+            Professional Brochure Design Expert in India<br className="hidden md:block" />
             Brochures that <span className="text-accent italic">perform</span>,<br className="hidden md:block" /> not just inform.
           </h1>
           <p className="fade-up fade-up-delay-2 mt-7 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
-            Premium, conversion-led brochure design for ambitious brands. Strategy + craft, delivered print-ready.
+            Premium brochure, company profile, and catalogue design services for ambitious brands across India — crafted for print, branding, and sales performance.
           </p>
           <div className="fade-up fade-up-delay-3 mt-10 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg" className="rounded-full h-12 px-7 shadow-glow">
@@ -39,7 +40,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
             </Button>
           </div>
           <p className="fade-up fade-up-delay-4 mt-6 text-xs text-muted-foreground">
-            Avg. response under 2 hours · Fixed quotes · 100% satisfaction
+            Based in Kochi, Kerala — Serving Bangalore, Chennai, Mumbai, Delhi, Hyderabad & all over India.
           </p>
         </div>
 
