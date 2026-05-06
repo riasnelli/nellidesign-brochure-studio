@@ -83,7 +83,7 @@ export const Contact = () => {
           : (prev.project ? `${planLine}\n\n${prev.project}` : `${planLine}\n\n`);
         return {
           ...prev,
-          brochureType: prev.brochureType || `${plan} package`,
+          brochureType: `${plan} package`,
           project: nextProject,
         };
       });
