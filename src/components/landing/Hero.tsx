@@ -24,8 +24,10 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
             </div>
             <GoogleReviewBadge />
           </div>
+          <p className="fade-up fade-up-delay-1 text-sm md:text-base font-medium text-muted-foreground mb-4">
+            Professional Brochure Design Expert in India
+          </p>
           <h1 className="fade-up fade-up-delay-1 font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
-            Professional Brochure Design Expert in India<br className="hidden md:block" />
             Brochures that <span className="text-accent italic">perform</span>,<br className="hidden md:block" /> not just inform.
           </h1>
           <p className="fade-up fade-up-delay-2 mt-7 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
