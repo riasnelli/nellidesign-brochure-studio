@@ -24,7 +24,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
             </div>
             <GoogleReviewBadge />
           </div>
-          <p className="fade-up fade-up-delay-1 text-sm md:text-base font-medium text-muted-foreground mb-4">
+          <p className="fade-up fade-up-delay-1 font-medium text-muted-foreground mb-2" style={{ fontSize: "1.3rem" }}>
             Professional Brochure Design Expert in India
           </p>
           <h1 className="fade-up fade-up-delay-1 font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
