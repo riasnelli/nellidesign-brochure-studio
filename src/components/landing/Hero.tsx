@@ -35,7 +35,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
           </p>
           <div className="fade-up fade-up-delay-3 mt-10 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg" className="rounded-full h-12 px-7 shadow-glow">
-              <a href="#contact">Get a Quote <ArrowRight size={16} className="ml-1" /></a>
+            <a href="#contact">Start Your Brochure <ArrowRight size={16} className="ml-1" /></a>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full h-12 px-7 bg-card">
               <a href="#work">View Work</a>
