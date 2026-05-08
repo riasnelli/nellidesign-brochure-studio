@@ -23,9 +23,8 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
               Trusted Brochure Design Expert Since 2009 · 15+ years
             </div>
             <GoogleReviewBadge />
-            <p className="md:hidden text-xs font-medium text-muted-foreground inline-flex items-center gap-1.5">
-              <Sparkles size={12} className="text-accent" />
-              Trusted Brochure Design Expert Since 2009 · 15+ years
+            <p className="md:hidden text-xs font-medium text-muted-foreground">
+              Trusted Brochure Design Expert Since 2009
             </p>
           </div>
           <h1 className="fade-up fade-up-delay-1 font-medium text-muted-foreground mb-2 whitespace-nowrap md:whitespace-normal text-[1rem] md:text-[1.3rem]">
