@@ -17,7 +17,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
       <div className="absolute inset-0 bg-gradient-soft" aria-hidden />
       <div className="container relative">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="fade-up flex flex-col md:flex-row flex-wrap items-center justify-center gap-2.5 mb-8">
+          <div className="fade-up flex flex-col md:flex-row flex-wrap items-center justify-center gap-1.5 md:gap-2.5 mb-8">
             <div className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border/60 shadow-soft text-xs font-medium text-muted-foreground">
               <Sparkles size={14} className="text-accent" />
               Trusted Brochure Design Expert Since 2009 · 15+ years
