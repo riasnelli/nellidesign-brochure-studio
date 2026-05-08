@@ -31,7 +31,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
             Professional Brochure Design Expert in India
           </h1>
           <h2 className="fade-up fade-up-delay-1 font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
-            Brochures that <span className="text-accent italic">perform</span>,<br className="hidden md:block" /> not just inform.
+            Brochures that <span className="text-accent italic">perform</span>,<span className="hidden md:inline">{" "}<br /></span> not just inform.
           </h2>
           <p className="fade-up fade-up-delay-2 mt-7 text-lg md:text-xl text-muted-foreground mx-auto text-balance" style={{ maxWidth: "52rem" }}>
             Premium brochure, company profile, and catalogue design services for ambitious brands across India — crafted for print, branding, and sales performance.
