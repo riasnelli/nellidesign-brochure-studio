@@ -17,14 +17,18 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
       <div className="absolute inset-0 bg-gradient-soft" aria-hidden />
       <div className="container relative">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="fade-up flex flex-wrap items-center justify-center gap-2.5 mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border/60 shadow-soft text-xs font-medium text-muted-foreground">
+          <div className="fade-up flex flex-col md:flex-row flex-wrap items-center justify-center gap-2.5 mb-8">
+            <div className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border/60 shadow-soft text-xs font-medium text-muted-foreground">
               <Sparkles size={14} className="text-accent" />
               Trusted Brochure Design Expert Since 2009 · 15+ years
             </div>
             <GoogleReviewBadge />
+            <p className="md:hidden text-xs font-medium text-muted-foreground inline-flex items-center gap-1.5">
+              <Sparkles size={12} className="text-accent" />
+              Trusted Brochure Design Expert Since 2009 · 15+ years
+            </p>
           </div>
-          <h1 className="fade-up fade-up-delay-1 font-medium text-muted-foreground mb-2" style={{ fontSize: "1.3rem" }}>
+          <h1 className="fade-up fade-up-delay-1 font-medium text-muted-foreground mb-2 whitespace-nowrap md:whitespace-normal text-[1rem] md:text-[1.3rem]">
             Professional Brochure Design Expert in India
           </h1>
           <h2 className="fade-up fade-up-delay-1 font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
