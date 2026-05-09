@@ -28,6 +28,35 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Write api/secrets.php from GitHub Secrets
+        # Generates dist/api/secrets.php at build time using repo secrets so the
+        # file is uploaded to the server on every deploy (and never committed
+        # to git). If any secret is missing, the step fails loudly instead of
+        # shipping a half-configured backend.
+        env:
+          GATEWAYHUB_ADMIN_EMAIL: ${{ secrets.GATEWAYHUB_ADMIN_EMAIL }}
+          GATEWAYHUB_ADMIN_PASSWORD_HASH: ${{ secrets.GATEWAYHUB_ADMIN_PASSWORD_HASH }}
+          GATEWAYHUB_JWT_SECRET: ${{ secrets.GATEWAYHUB_JWT_SECRET }}
+        run: |
+          set -euo pipefail
+          : "${GATEWAYHUB_ADMIN_EMAIL:?Missing GitHub secret GATEWAYHUB_ADMIN_EMAIL}"
+          : "${GATEWAYHUB_ADMIN_PASSWORD_HASH:?Missing GitHub secret GATEWAYHUB_ADMIN_PASSWORD_HASH}"
+          : "${GATEWAYHUB_JWT_SECRET:?Missing GitHub secret GATEWAYHUB_JWT_SECRET}"
+          mkdir -p dist/api
+          php_escape() { printf "%s" "$1" | sed -e "s/\\\\/\\\\\\\\/g" -e "s/'/\\\\'/g"; }
+          EMAIL_ESC=$(php_escape "$GATEWAYHUB_ADMIN_EMAIL")
+          HASH_ESC=$(php_escape "$GATEWAYHUB_ADMIN_PASSWORD_HASH")
+          JWT_ESC=$(php_escape "$GATEWAYHUB_JWT_SECRET")
+          cat > dist/api/secrets.php <<PHP
+          <?php
+          // AUTO-GENERATED on deploy from GitHub Secrets. Do not edit on server.
+          if (!defined('GATEWAYHUB_INTERNAL')) { http_response_code(403); exit('Forbidden'); }
+          define('ADMIN_EMAIL', '${EMAIL_ESC}');
+          define('ADMIN_PASSWORD_HASH', '${HASH_ESC}');
+          define('JWT_SECRET', '${JWT_ESC}');
+          PHP
+          echo "Wrote dist/api/secrets.php ($(wc -c < dist/api/secrets.php) bytes)"
+
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -49,7 +78,5 @@ jobs:
             gatewayhub-data/**
             **/brochures/**
             brochures/**
-            **/api/secrets.php
-            api/secrets.php
             **/api/config.local.php
             api/config.local.php
