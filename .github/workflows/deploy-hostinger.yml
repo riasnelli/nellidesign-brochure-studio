@@ -36,6 +36,7 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           server-dir: ${{ secrets.HOSTINGER_FTP_DIR }}
           local-dir: ./dist/
+          dangerous-clean-slate: false
           # Protect live data + secrets on the server.
           # Patterns are matched against BOTH local files (won't upload)
           # AND remote files (won't delete). Use **/ prefix so the match
