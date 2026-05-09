@@ -26,8 +26,20 @@ if (is_file($__secretsFile)) {
 
 // ---- Resolve secrets: env var first, then secrets.php constant ----
 $__env = function (string $name, ?string $default = null): ?string {
-  $v = getenv($name);
-  if ($v !== false && $v !== '') return $v;
+  // Hostinger/PHP-FPM can expose environment variables through different
+  // channels depending on the account settings. Check all common sources so
+  // GatewayHub keeps working even when api/secrets.php is not present.
+  $values = [
+    getenv($name),
+    $_ENV[$name] ?? null,
+    $_SERVER[$name] ?? null,
+    $_SERVER['REDIRECT_' . $name] ?? null,
+  ];
+
+  foreach ($values as $v) {
+    if (is_string($v) && trim($v) !== '') return trim($v);
+  }
+
   return $default;
 };
 
