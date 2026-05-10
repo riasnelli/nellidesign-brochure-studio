@@ -82,7 +82,43 @@ export const Contact = () => {
     timeline: "",
     project: "",
   });
+  const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
+  const startedAtRef = useRef<number>(Date.now());
+  const captchaRef = useRef<HTMLDivElement>(null);
+  const captchaIdRef = useRef<number | null>(null);
+
+  // Load reCAPTCHA v2 script + render widget
+  useEffect(() => {
+    if (!RECAPTCHA_SITE_KEY) return;
+
+    const renderWidget = () => {
+      if (!window.grecaptcha || !captchaRef.current || captchaIdRef.current !== null) return;
+      try {
+        captchaIdRef.current = window.grecaptcha.render(captchaRef.current, {
+          sitekey: RECAPTCHA_SITE_KEY,
+          theme: "dark",
+        });
+      } catch {/* already rendered */}
+    };
+
+    if (window.grecaptcha?.render) {
+      renderWidget();
+    } else if (!document.getElementById("recaptcha-script")) {
+      window.onRecaptchaLoad = renderWidget;
+      const s = document.createElement("script");
+      s.id = "recaptcha-script";
+      s.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    } else {
+      const t = setInterval(() => {
+        if (window.grecaptcha?.render) { clearInterval(t); renderWidget(); }
+      }, 200);
+      return () => clearInterval(t);
+    }
+  }, []);
 
   useEffect(() => {
     const applyPlan = (plan: string) => {
