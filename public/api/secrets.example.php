@@ -29,3 +29,9 @@ define('ADMIN_PASSWORD_HASH', '$2y$12$REPLACE_ME_WITH_REAL_BCRYPT_HASH..........
 // JWT signing secret. Generate with:
 //   php -r "echo bin2hex(random_bytes(32));"
 define('JWT_SECRET', 'REPLACE_ME_WITH_64_HEX_CHARS');
+
+// ----- Contact form (public/api/contact.php) -----
+// Google reCAPTCHA v2 secret key (https://www.google.com/recaptcha/admin)
+putenv('RECAPTCHA_SECRET=REPLACE_ME_WITH_RECAPTCHA_V2_SECRET');
+// Where enquiries are delivered (defaults to hello@nellidesign.com)
+putenv('CONTACT_TO_EMAIL=hello@nellidesign.com');
