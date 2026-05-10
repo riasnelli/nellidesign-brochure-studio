@@ -332,6 +332,27 @@ export const Contact = () => {
                   />
                 </div>
 
+                {/* Honeypot — hidden from real users, irresistible to bots */}
+                <div aria-hidden="true" className="absolute left-[-10000px] top-auto w-px h-px overflow-hidden">
+                  <label htmlFor="company_website">Company website</label>
+                  <input
+                    id="company_website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
+                {RECAPTCHA_SITE_KEY ? (
+                  <div ref={captchaRef} className="flex justify-start" />
+                ) : (
+                  <p className="text-xs text-background/50">
+                    Captcha disabled — set <code>VITE_RECAPTCHA_SITE_KEY</code> to enable spam protection.
+                  </p>
+                )}
+
                 <div className="grid sm:grid-cols-2 gap-3">
                   <Button
                     type="submit"
