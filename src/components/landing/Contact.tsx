@@ -159,27 +159,54 @@ export const Contact = () => {
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(form);
     if (!result.success) {
       toast.error(result.error.issues[0].message);
       return;
     }
+
+    let recaptchaToken = "";
+    if (RECAPTCHA_SITE_KEY) {
+      recaptchaToken = window.grecaptcha?.getResponse(captchaIdRef.current ?? undefined) ?? "";
+      if (!recaptchaToken) {
+        toast.error("Please confirm you're not a robot.");
+        return;
+      }
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...result.data,
+          company_website: honeypot,
+          startedAt: startedAtRef.current,
+          recaptchaToken,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.error) {
+        throw new Error(data?.error || `Request failed (${res.status})`);
+      }
       toast.success("Thanks! I'll reply within 2 hours.");
       setForm({
-        name: "",
-        email: "",
-        brochureType: "",
-        pages: "",
-        budget: "",
-        timeline: "",
-        project: "",
+        name: "", email: "", brochureType: "", pages: "",
+        budget: "", timeline: "", project: "",
       });
+      startedAtRef.current = Date.now();
+      if (window.grecaptcha && captchaIdRef.current !== null) {
+        window.grecaptcha.reset(captchaIdRef.current);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not send. Try WhatsApp.";
+      toast.error(msg);
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
