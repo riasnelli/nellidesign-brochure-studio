@@ -37,16 +37,21 @@ jobs:
           GATEWAYHUB_ADMIN_EMAIL: ${{ secrets.GATEWAYHUB_ADMIN_EMAIL }}
           GATEWAYHUB_ADMIN_PASSWORD_HASH: ${{ secrets.GATEWAYHUB_ADMIN_PASSWORD_HASH }}
           GATEWAYHUB_JWT_SECRET: ${{ secrets.GATEWAYHUB_JWT_SECRET }}
+          RECAPTCHA_SECRET: ${{ secrets.RECAPTCHA_SECRET }}
+          CONTACT_TO_EMAIL: ${{ secrets.CONTACT_TO_EMAIL }}
         run: |
           set -euo pipefail
           : "${GATEWAYHUB_ADMIN_EMAIL:?Missing GitHub secret GATEWAYHUB_ADMIN_EMAIL}"
           : "${GATEWAYHUB_ADMIN_PASSWORD_HASH:?Missing GitHub secret GATEWAYHUB_ADMIN_PASSWORD_HASH}"
           : "${GATEWAYHUB_JWT_SECRET:?Missing GitHub secret GATEWAYHUB_JWT_SECRET}"
+          : "${RECAPTCHA_SECRET:?Missing GitHub secret RECAPTCHA_SECRET}"
           mkdir -p dist/api
           php_escape() { printf "%s" "$1" | sed -e "s/\\\\/\\\\\\\\/g" -e "s/'/\\\\'/g"; }
           EMAIL_ESC=$(php_escape "$GATEWAYHUB_ADMIN_EMAIL")
           HASH_ESC=$(php_escape "$GATEWAYHUB_ADMIN_PASSWORD_HASH")
           JWT_ESC=$(php_escape "$GATEWAYHUB_JWT_SECRET")
+          RECAP_ESC=$(php_escape "$RECAPTCHA_SECRET")
+          TO_ESC=$(php_escape "${CONTACT_TO_EMAIL:-hello@nellidesign.com}")
           cat > dist/api/secrets.php <<PHP
           <?php
           // AUTO-GENERATED on deploy from GitHub Secrets. Do not edit on server.
@@ -54,6 +59,11 @@ jobs:
           define('ADMIN_EMAIL', '${EMAIL_ESC}');
           define('ADMIN_PASSWORD_HASH', '${HASH_ESC}');
           define('JWT_SECRET', '${JWT_ESC}');
+          // Contact form / spam protection
+          putenv('RECAPTCHA_SECRET=${RECAP_ESC}');
+          putenv('CONTACT_TO_EMAIL=${TO_ESC}');
+          \$_ENV['RECAPTCHA_SECRET'] = '${RECAP_ESC}';
+          \$_ENV['CONTACT_TO_EMAIL'] = '${TO_ESC}';
           PHP
           echo "Wrote dist/api/secrets.php ($(wc -c < dist/api/secrets.php) bytes)"
 
