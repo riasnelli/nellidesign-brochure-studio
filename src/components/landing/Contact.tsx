@@ -4,21 +4,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Reveal } from "@/components/Reveal";
 import { MessageCircle, Send } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
+  name: z.string().trim().min(2, "Please enter your name").max(100),
   email: z.string().trim().email("Enter a valid email").max(255),
   brochureType: z.string().trim().max(100).optional(),
-  pages: z.string().trim().max(20).optional(),
+  pages: z.string().trim().max(20).regex(/^[0-9 +\-]*$/, "Pages must be a number").optional(),
   budget: z.string().trim().max(50).optional(),
   timeline: z.string().trim().max(50).optional(),
-  project: z.string().trim().min(1, "Tell me about your project").max(1000),
+  project: z.string().trim().min(10, "Tell me a bit more about your project").max(1000),
 });
 
 const WHATSAPP_NUMBER = "919497127222";
+const RECAPTCHA_SITE_KEY = (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined) ?? "";
+
+declare global {
+  interface Window {
+    grecaptcha?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => number;
+      reset: (id?: number) => void;
+      getResponse: (id?: number) => string;
+    };
+    onRecaptchaLoad?: () => void;
+  }
+}
 
 type FormState = {
   name: string;
