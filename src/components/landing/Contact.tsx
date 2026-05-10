@@ -4,21 +4,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Reveal } from "@/components/Reveal";
 import { MessageCircle, Send } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
+  name: z.string().trim().min(2, "Please enter your name").max(100),
   email: z.string().trim().email("Enter a valid email").max(255),
   brochureType: z.string().trim().max(100).optional(),
-  pages: z.string().trim().max(20).optional(),
+  pages: z.string().trim().max(20).regex(/^[0-9 +\-]*$/, "Pages must be a number").optional(),
   budget: z.string().trim().max(50).optional(),
   timeline: z.string().trim().max(50).optional(),
-  project: z.string().trim().min(1, "Tell me about your project").max(1000),
+  project: z.string().trim().min(10, "Tell me a bit more about your project").max(1000),
 });
 
 const WHATSAPP_NUMBER = "919497127222";
+const RECAPTCHA_SITE_KEY = (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined) ?? "";
+
+declare global {
+  interface Window {
+    grecaptcha?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => number;
+      reset: (id?: number) => void;
+      getResponse: (id?: number) => string;
+    };
+    onRecaptchaLoad?: () => void;
+  }
+}
 
 type FormState = {
   name: string;
@@ -70,7 +82,43 @@ export const Contact = () => {
     timeline: "",
     project: "",
   });
+  const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
+  const startedAtRef = useRef<number>(Date.now());
+  const captchaRef = useRef<HTMLDivElement>(null);
+  const captchaIdRef = useRef<number | null>(null);
+
+  // Load reCAPTCHA v2 script + render widget
+  useEffect(() => {
+    if (!RECAPTCHA_SITE_KEY) return;
+
+    const renderWidget = () => {
+      if (!window.grecaptcha || !captchaRef.current || captchaIdRef.current !== null) return;
+      try {
+        captchaIdRef.current = window.grecaptcha.render(captchaRef.current, {
+          sitekey: RECAPTCHA_SITE_KEY,
+          theme: "dark",
+        });
+      } catch {/* already rendered */}
+    };
+
+    if (window.grecaptcha?.render) {
+      renderWidget();
+    } else if (!document.getElementById("recaptcha-script")) {
+      window.onRecaptchaLoad = renderWidget;
+      const s = document.createElement("script");
+      s.id = "recaptcha-script";
+      s.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    } else {
+      const t = setInterval(() => {
+        if (window.grecaptcha?.render) { clearInterval(t); renderWidget(); }
+      }, 200);
+      return () => clearInterval(t);
+    }
+  }, []);
 
   useEffect(() => {
     const applyPlan = (plan: string) => {
@@ -111,27 +159,54 @@ export const Contact = () => {
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(form);
     if (!result.success) {
       toast.error(result.error.issues[0].message);
       return;
     }
+
+    let recaptchaToken = "";
+    if (RECAPTCHA_SITE_KEY) {
+      recaptchaToken = window.grecaptcha?.getResponse(captchaIdRef.current ?? undefined) ?? "";
+      if (!recaptchaToken) {
+        toast.error("Please confirm you're not a robot.");
+        return;
+      }
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...result.data,
+          company_website: honeypot,
+          startedAt: startedAtRef.current,
+          recaptchaToken,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.error) {
+        throw new Error(data?.error || `Request failed (${res.status})`);
+      }
       toast.success("Thanks! I'll reply within 2 hours.");
       setForm({
-        name: "",
-        email: "",
-        brochureType: "",
-        pages: "",
-        budget: "",
-        timeline: "",
-        project: "",
+        name: "", email: "", brochureType: "", pages: "",
+        budget: "", timeline: "", project: "",
       });
+      startedAtRef.current = Date.now();
+      if (window.grecaptcha && captchaIdRef.current !== null) {
+        window.grecaptcha.reset(captchaIdRef.current);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not send. Try WhatsApp.";
+      toast.error(msg);
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -256,6 +331,27 @@ export const Contact = () => {
                     placeholder="Goals, audience, anything else I should know…"
                   />
                 </div>
+
+                {/* Honeypot — hidden from real users, irresistible to bots */}
+                <div aria-hidden="true" className="absolute left-[-10000px] top-auto w-px h-px overflow-hidden">
+                  <label htmlFor="company_website">Company website</label>
+                  <input
+                    id="company_website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
+                {RECAPTCHA_SITE_KEY ? (
+                  <div ref={captchaRef} className="flex justify-start" />
+                ) : (
+                  <p className="text-xs text-background/50">
+                    Captcha disabled — set <code>VITE_RECAPTCHA_SITE_KEY</code> to enable spam protection.
+                  </p>
+                )}
 
                 <div className="grid sm:grid-cols-2 gap-3">
                   <Button
