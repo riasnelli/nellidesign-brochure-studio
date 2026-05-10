@@ -26,6 +26,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
         run: npm run build
 
       - name: Write api/secrets.php from GitHub Secrets
