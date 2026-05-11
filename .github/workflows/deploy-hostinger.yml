@@ -33,8 +33,8 @@ jobs:
       - name: Write api/secrets.php from GitHub Secrets
         # Generates dist/api/secrets.php at build time using repo secrets so the
         # file is uploaded to the server on every deploy (and never committed
-        # to git). If any secret is missing, the step fails loudly instead of
-        # shipping a half-configured backend.
+        # to git). Only RECAPTCHA_SECRET is required for the contact form; the
+        # GatewayHub secrets can still come from Hostinger environment vars.
         env:
           GATEWAYHUB_ADMIN_EMAIL: ${{ secrets.GATEWAYHUB_ADMIN_EMAIL }}
           GATEWAYHUB_ADMIN_PASSWORD_HASH: ${{ secrets.GATEWAYHUB_ADMIN_PASSWORD_HASH }}
@@ -43,24 +43,15 @@ jobs:
           CONTACT_TO_EMAIL: ${{ secrets.CONTACT_TO_EMAIL }}
         run: |
           set -euo pipefail
-          : "${GATEWAYHUB_ADMIN_EMAIL:?Missing GitHub secret GATEWAYHUB_ADMIN_EMAIL}"
-          : "${GATEWAYHUB_ADMIN_PASSWORD_HASH:?Missing GitHub secret GATEWAYHUB_ADMIN_PASSWORD_HASH}"
-          : "${GATEWAYHUB_JWT_SECRET:?Missing GitHub secret GATEWAYHUB_JWT_SECRET}"
           : "${RECAPTCHA_SECRET:?Missing GitHub secret RECAPTCHA_SECRET}"
           mkdir -p dist/api
           php_escape() { printf "%s" "$1" | sed -e "s/\\\\/\\\\\\\\/g" -e "s/'/\\\\'/g"; }
-          EMAIL_ESC=$(php_escape "$GATEWAYHUB_ADMIN_EMAIL")
-          HASH_ESC=$(php_escape "$GATEWAYHUB_ADMIN_PASSWORD_HASH")
-          JWT_ESC=$(php_escape "$GATEWAYHUB_JWT_SECRET")
           RECAP_ESC=$(php_escape "$RECAPTCHA_SECRET")
           TO_ESC=$(php_escape "${CONTACT_TO_EMAIL:-hello@nellidesign.com}")
           cat > dist/api/secrets.php <<PHP
           <?php
           // AUTO-GENERATED on deploy from GitHub Secrets. Do not edit on server.
           if (!defined('GATEWAYHUB_INTERNAL')) { http_response_code(403); exit('Forbidden'); }
-          define('ADMIN_EMAIL', '${EMAIL_ESC}');
-          define('ADMIN_PASSWORD_HASH', '${HASH_ESC}');
-          define('JWT_SECRET', '${JWT_ESC}');
           // Contact form / spam protection — defined as constants AND env so
           // both lookup styles work regardless of PHP-FPM env handling.
           define('RECAPTCHA_SECRET', '${RECAP_ESC}');
@@ -70,7 +61,37 @@ jobs:
           \$_ENV['RECAPTCHA_SECRET'] = '${RECAP_ESC}';
           \$_ENV['CONTACT_TO_EMAIL'] = '${TO_ESC}';
           PHP
+          if [ -n "${GATEWAYHUB_ADMIN_EMAIL:-}" ]; then
+            printf "define('ADMIN_EMAIL', '%s');\n" "$(php_escape "$GATEWAYHUB_ADMIN_EMAIL")" >> dist/api/secrets.php
+          fi
+          if [ -n "${GATEWAYHUB_ADMIN_PASSWORD_HASH:-}" ]; then
+            printf "define('ADMIN_PASSWORD_HASH', '%s');\n" "$(php_escape "$GATEWAYHUB_ADMIN_PASSWORD_HASH")" >> dist/api/secrets.php
+          fi
+          if [ -n "${GATEWAYHUB_JWT_SECRET:-}" ]; then
+            printf "define('JWT_SECRET', '%s');\n" "$(php_escape "$GATEWAYHUB_JWT_SECRET")" >> dist/api/secrets.php
+          fi
           echo "Wrote dist/api/secrets.php ($(wc -c < dist/api/secrets.php) bytes)"
+
+      - name: Force-upload api/secrets.php without deleting remote files
+        # The normal sync can skip server-only files depending on sync state.
+        # This uploads only secrets.php and never deletes anything on Hostinger.
+        env:
+          HOSTINGER_FTP_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
+          HOSTINGER_FTP_USER: ${{ secrets.HOSTINGER_FTP_USER }}
+          HOSTINGER_FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          HOSTINGER_FTP_DIR: ${{ secrets.HOSTINGER_FTP_DIR }}
+        run: |
+          set -euo pipefail
+          : "${HOSTINGER_FTP_HOST:?Missing GitHub secret HOSTINGER_FTP_HOST}"
+          : "${HOSTINGER_FTP_USER:?Missing GitHub secret HOSTINGER_FTP_USER}"
+          : "${HOSTINGER_FTP_PASSWORD:?Missing GitHub secret HOSTINGER_FTP_PASSWORD}"
+          : "${HOSTINGER_FTP_DIR:?Missing GitHub secret HOSTINGER_FTP_DIR}"
+          REMOTE_PATH="${HOSTINGER_FTP_DIR%/}/api/secrets.php"
+          curl --fail --silent --show-error --ftp-create-dirs \
+            --user "$HOSTINGER_FTP_USER:$HOSTINGER_FTP_PASSWORD" \
+            --upload-file dist/api/secrets.php \
+            "ftp://${HOSTINGER_FTP_HOST}/${REMOTE_PATH}"
+          echo "Uploaded api/secrets.php directly"
 
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
