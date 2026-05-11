@@ -61,7 +61,10 @@ jobs:
           define('ADMIN_EMAIL', '${EMAIL_ESC}');
           define('ADMIN_PASSWORD_HASH', '${HASH_ESC}');
           define('JWT_SECRET', '${JWT_ESC}');
-          // Contact form / spam protection
+          // Contact form / spam protection — defined as constants AND env so
+          // both lookup styles work regardless of PHP-FPM env handling.
+          define('RECAPTCHA_SECRET', '${RECAP_ESC}');
+          define('CONTACT_TO_EMAIL', '${TO_ESC}');
           putenv('RECAPTCHA_SECRET=${RECAP_ESC}');
           putenv('CONTACT_TO_EMAIL=${TO_ESC}');
           \$_ENV['RECAPTCHA_SECRET'] = '${RECAP_ESC}';
