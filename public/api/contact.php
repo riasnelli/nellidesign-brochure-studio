@@ -95,7 +95,7 @@ if (!is_array($vr) || empty($vr['success'])) {
 }
 
 // --- Build email ---
-$to   = $__env('CONTACT_TO_EMAIL', 'hello@nellidesign.com');
+$to   = $__env('CONTACT_TO_EMAIL', defined('CONTACT_TO_EMAIL') ? (string)constant('CONTACT_TO_EMAIL') : 'hello@nellidesign.com');
 $host = $_SERVER['HTTP_HOST'] ?? 'nellidesign.com';
 $from = $__env('CONTACT_FROM_EMAIL', 'no-reply@' . preg_replace('/^www\./', '', $host));
 
