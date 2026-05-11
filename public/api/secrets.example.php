@@ -32,6 +32,8 @@ define('JWT_SECRET', 'REPLACE_ME_WITH_64_HEX_CHARS');
 
 // ----- Contact form (public/api/contact.php) -----
 // Google reCAPTCHA v2 secret key (https://www.google.com/recaptcha/admin)
+define('RECAPTCHA_SECRET', 'REPLACE_ME_WITH_RECAPTCHA_V2_SECRET');
 putenv('RECAPTCHA_SECRET=REPLACE_ME_WITH_RECAPTCHA_V2_SECRET');
 // Where enquiries are delivered (defaults to hello@nellidesign.com)
+define('CONTACT_TO_EMAIL', 'hello@nellidesign.com');
 putenv('CONTACT_TO_EMAIL=hello@nellidesign.com');
