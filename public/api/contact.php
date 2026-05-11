@@ -69,7 +69,9 @@ if (preg_match('/[\r\n]/', $email) || preg_match('/[\r\n]/', $name)) {
 }
 
 // --- Verify reCAPTCHA v2 ---
+// Try env first, then PHP constant fallback (set by auto-generated secrets.php).
 $secret = $__env('RECAPTCHA_SECRET', '');
+if ($secret === '' && defined('RECAPTCHA_SECRET')) $secret = (string)constant('RECAPTCHA_SECRET');
 if ($secret === '') _resp(['error' => 'Server not configured: missing RECAPTCHA_SECRET'], 500);
 if ($token === '') _resp(['error' => 'Please complete the captcha'], 400);
 
@@ -93,7 +95,7 @@ if (!is_array($vr) || empty($vr['success'])) {
 }
 
 // --- Build email ---
-$to   = $__env('CONTACT_TO_EMAIL', 'hello@nellidesign.com');
+$to   = $__env('CONTACT_TO_EMAIL', defined('CONTACT_TO_EMAIL') ? (string)constant('CONTACT_TO_EMAIL') : 'hello@nellidesign.com');
 $host = $_SERVER['HTTP_HOST'] ?? 'nellidesign.com';
 $from = $__env('CONTACT_FROM_EMAIL', 'no-reply@' . preg_replace('/^www\./', '', $host));
 
