@@ -69,7 +69,9 @@ if (preg_match('/[\r\n]/', $email) || preg_match('/[\r\n]/', $name)) {
 }
 
 // --- Verify reCAPTCHA v2 ---
+// Try env first, then PHP constant fallback (set by auto-generated secrets.php).
 $secret = $__env('RECAPTCHA_SECRET', '');
+if ($secret === '' && defined('RECAPTCHA_SECRET')) $secret = (string)constant('RECAPTCHA_SECRET');
 if ($secret === '') _resp(['error' => 'Server not configured: missing RECAPTCHA_SECRET'], 500);
 if ($token === '') _resp(['error' => 'Please complete the captcha'], 400);
 
