@@ -19,7 +19,9 @@ const schema = z.object({
 });
 
 const WHATSAPP_NUMBER = "919497127222";
-const RECAPTCHA_SITE_KEY = (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined) ?? "";
+const RECAPTCHA_SITE_KEY =
+  (import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined) ||
+  "6LfxzuYsAAAAAIQ71Z_UD72EkUkUagyXzD96PDNb";
 
 declare global {
   interface Window {
