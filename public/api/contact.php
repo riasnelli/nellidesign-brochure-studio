@@ -70,28 +70,32 @@ if (preg_match('/[\r\n]/', $email) || preg_match('/[\r\n]/', $name)) {
 
 // --- Verify reCAPTCHA v2 ---
 // Try env first, then PHP constant fallback (set by auto-generated secrets.php).
+// If the host is still missing the secret, allow the enquiry through so the
+// contact form remains usable; verification resumes automatically once the
+// secret is present on the server.
 $secret = $__env('RECAPTCHA_SECRET', '');
 if ($secret === '' && defined('RECAPTCHA_SECRET')) $secret = (string)constant('RECAPTCHA_SECRET');
-if ($secret === '') _resp(['error' => 'Server not configured: missing RECAPTCHA_SECRET'], 500);
-if ($token === '') _resp(['error' => 'Please complete the captcha'], 400);
+if ($secret !== '') {
+  if ($token === '') _resp(['error' => 'Please complete the captcha'], 400);
 
-$verify = @file_get_contents(
-  'https://www.google.com/recaptcha/api/siteverify',
-  false,
-  stream_context_create(['http' => [
-    'method'  => 'POST',
-    'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
-    'content' => http_build_query([
-      'secret'   => $secret,
-      'response' => $token,
-      'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
-    ]),
-    'timeout' => 8,
-  ]])
-);
-$vr = $verify ? json_decode($verify, true) : null;
-if (!is_array($vr) || empty($vr['success'])) {
-  _resp(['error' => 'Captcha verification failed'], 400);
+  $verify = @file_get_contents(
+    'https://www.google.com/recaptcha/api/siteverify',
+    false,
+    stream_context_create(['http' => [
+      'method'  => 'POST',
+      'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+      'content' => http_build_query([
+        'secret'   => $secret,
+        'response' => $token,
+        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+      ]),
+      'timeout' => 8,
+    ]])
+  );
+  $vr = $verify ? json_decode($verify, true) : null;
+  if (!is_array($vr) || empty($vr['success'])) {
+    _resp(['error' => 'Captcha verification failed'], 400);
+  }
 }
 
 // --- Build email ---
