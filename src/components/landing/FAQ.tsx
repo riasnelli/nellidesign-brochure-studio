@@ -1,5 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Reveal } from "@/components/Reveal";
+import { useEffect } from "react";
 
 const faqs = [
   { q: "How long does a brochure project take?", a: "Most company profiles and brochures take 7–14 days from brief approval to print-ready files. Rush projects are possible — just ask." },
@@ -10,7 +11,30 @@ const faqs = [
   { q: "How many revisions are included?", a: "Two full rounds of revisions are included in every project. Additional rounds can be added if needed." },
 ];
 
-export const FAQ = () => (
+export const FAQ = () => {
+  useEffect(() => {
+    const id = "ld-json-faq";
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    };
+    let script = document.getElementById(id) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = id;
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(ld);
+    return () => { script?.remove(); };
+  }, []);
+
+  return (
   <section id="faq" className="py-24 md:py-32 bg-secondary/40">
     <div className="container max-w-3xl">
       <Reveal>
@@ -37,4 +61,5 @@ export const FAQ = () => (
       </Reveal>
     </div>
   </section>
-);
+  );
+};

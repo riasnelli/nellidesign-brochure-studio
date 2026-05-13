@@ -18,12 +18,22 @@ const GatewayHub = () => {
     meta.name = "robots";
     meta.content = "noindex,nofollow";
     document.head.appendChild(meta);
+    const desc = document.createElement("meta");
+    desc.name = "description";
+    desc.content = "Private admin sign-in for the NelliDESiGN GatewayHub portfolio manager.";
+    document.head.appendChild(desc);
+    const canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    canonical.href = window.location.origin + "/gatewayhub";
+    document.head.appendChild(canonical);
     if (getToken()) nav("/gatewayhub/admin", { replace: true });
     if (new URLSearchParams(window.location.search).get("expired") === "1") {
       toast.error("Your session expired — please sign in again.");
     }
     return () => {
       document.head.removeChild(meta);
+      document.head.removeChild(desc);
+      document.head.removeChild(canonical);
     };
   }, [nav]);
 

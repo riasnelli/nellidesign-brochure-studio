@@ -25,7 +25,7 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    document.title = "NelliDESiGN — Premium Brochure Design | Company Profiles, Catalogues, Corporate";
+    document.title = "NelliDESiGN — Premium Brochure Design Studio";
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
       if (!el) {
@@ -35,10 +35,23 @@ const Index = () => {
       }
       el.content = content;
     };
+    const setOg = (property: string, content: string) => {
+      let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("property", property);
+        document.head.appendChild(el);
+      }
+      el.content = content;
+    };
     setMeta(
       "description",
-      "Premium brochure design by NelliDESiGN. 15+ years crafting company profiles, product catalogues and corporate brochures that convert. Get a fixed quote in 24 hours."
+      "Premium brochure design — company profiles, product catalogues and corporate brochures that convert. Fixed quote in 24 hours."
     );
+    setOg("og:title", "NelliDESiGN — Premium Brochure Design Studio");
+    setOg("og:description", "Premium brochure design — company profiles, product catalogues and corporate brochures that convert.");
+    setOg("og:url", window.location.origin + "/");
+    setOg("og:image", window.location.origin + "/og-image.jpg");
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
       canonical = document.createElement("link");
@@ -54,6 +67,8 @@ const Index = () => {
       description: "Premium brochure design studio specialising in company profiles, product catalogues and corporate brochures.",
       areaServed: "Worldwide",
       url: window.location.origin,
+      telephone: "+919497127222",
+      image: window.location.origin + "/og-image.jpg",
     };
     let script = document.getElementById("ld-json") as HTMLScriptElement | null;
     if (!script) {
