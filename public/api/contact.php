@@ -56,6 +56,7 @@ if (!is_array($body)) _resp(['error' => 'Invalid request'], 400);
 // --- Honeypot: bots happily fill every field ---
 $honey = trim((string)($body['company_website'] ?? ''));
 if ($honey !== '') {
+  $__log['result'] = 'honeypot_triggered';
   // Pretend success so the bot doesn't retry.
   _resp(['ok' => true]);
 }
@@ -64,7 +65,11 @@ if ($honey !== '') {
 $startedAt = (int)($body['startedAt'] ?? 0);
 if ($startedAt > 0) {
   $elapsedMs = (int)round(microtime(true) * 1000) - $startedAt;
-  if ($elapsedMs < 1500) _resp(['ok' => true]); // looks automated
+  if ($elapsedMs < 1500) {
+    $__log['result'] = 'rate_limited';
+    $__log['elapsed_ms'] = $elapsedMs;
+    _resp(['ok' => true]); // looks automated
+  }
 }
 
 // --- Validate fields ---
@@ -77,28 +82,29 @@ $timeline    = trim((string)($body['timeline'] ?? ''));
 $project     = trim((string)($body['project'] ?? ''));
 $token       = trim((string)($body['recaptchaToken'] ?? ''));
 
-if ($name === '' || mb_strlen($name) > 100)   _resp(['error' => 'Name is required'], 400);
-if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 255)
-  _resp(['error' => 'Valid email is required'], 400);
-if ($project === '' || mb_strlen($project) > 1000) _resp(['error' => 'Tell me about your project'], 400);
+$__log['name']  = $name;
+$__log['email'] = $email;
+
+if ($name === '' || mb_strlen($name) > 100)   { $__log['result'] = 'validation_failed:name'; _resp(['error' => 'Name is required'], 400); }
+if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 255) {
+  $__log['result'] = 'validation_failed:email'; _resp(['error' => 'Valid email is required'], 400);
+}
+if ($project === '' || mb_strlen($project) > 1000) { $__log['result'] = 'validation_failed:project'; _resp(['error' => 'Tell me about your project'], 400); }
 foreach ([[$brochureType,100],[$pages,20],[$budget,50],[$timeline,50]] as [$v,$max]) {
-  if (mb_strlen($v) > $max) _resp(['error' => 'One of the fields is too long'], 400);
+  if (mb_strlen($v) > $max) { $__log['result'] = 'validation_failed:length'; _resp(['error' => 'One of the fields is too long'], 400); }
 }
 
 // --- Block obvious header-injection attempts in the email field ---
 if (preg_match('/[\r\n]/', $email) || preg_match('/[\r\n]/', $name)) {
+  $__log['result'] = 'validation_failed:injection';
   _resp(['error' => 'Invalid input'], 400);
 }
 
 // --- Verify reCAPTCHA v2 ---
-// Try env first, then PHP constant fallback (set by auto-generated secrets.php).
-// If the host is still missing the secret, allow the enquiry through so the
-// contact form remains usable; verification resumes automatically once the
-// secret is present on the server.
 $secret = $__env('RECAPTCHA_SECRET', '');
 if ($secret === '' && defined('RECAPTCHA_SECRET')) $secret = (string)constant('RECAPTCHA_SECRET');
 if ($secret !== '') {
-  if ($token === '') _resp(['error' => 'Please complete the captcha'], 400);
+  if ($token === '') { $__log['recaptcha'] = 'missing_token'; _resp(['error' => 'Please complete the captcha'], 400); }
 
   $verify = @file_get_contents(
     'https://www.google.com/recaptcha/api/siteverify',
@@ -116,8 +122,13 @@ if ($secret !== '') {
   );
   $vr = $verify ? json_decode($verify, true) : null;
   if (!is_array($vr) || empty($vr['success'])) {
+    $__log['recaptcha'] = 'failed';
+    $__log['recaptcha_errors'] = is_array($vr) ? ($vr['error-codes'] ?? null) : 'no_response';
     _resp(['error' => 'Captcha verification failed'], 400);
   }
+  $__log['recaptcha'] = 'verified';
+} else {
+  $__log['recaptcha'] = 'no_secret_configured';
 }
 
 // --- Build email ---
@@ -154,7 +165,17 @@ $headers = [
   'MIME-Version: 1.0',
 ];
 
-$ok = @mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $message, implode("\r\n", $headers));
-if (!$ok) _resp(['error' => 'Could not send email. Please try WhatsApp.'], 500);
+$__log['mail_to']   = $to;
+$__log['mail_from'] = $from;
 
+$ok = @mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $message, implode("\r\n", $headers));
+if (!$ok) {
+  $err = error_get_last();
+  $__log['email_delivery'] = 'failed';
+  $__log['mail_error'] = $err['message'] ?? null;
+  _resp(['error' => 'Could not send email. Please try WhatsApp.'], 500);
+}
+
+$__log['email_delivery'] = 'sent';
+$__log['result'] = 'ok';
 _resp(['ok' => true]);
