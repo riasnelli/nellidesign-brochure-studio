@@ -194,7 +194,7 @@ export const Contact = () => {
       if (!res.ok || data?.error) {
         throw new Error(data?.error || `Request failed (${res.status})`);
       }
-      toast.success("Thanks! I'll reply within 2 hours.");
+      toast.success("Thanks! I'll reply as soon as possible.");
       setForm({
         name: "", email: "", brochureType: "", pages: "",
         budget: "", timeline: "", project: "",
