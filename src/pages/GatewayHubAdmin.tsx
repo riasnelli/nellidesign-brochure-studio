@@ -46,14 +46,35 @@ const Admin = () => {
 
   useEffect(() => {
     document.title = "GatewayHub Admin — Portfolio";
+    const robots = document.createElement("meta");
+    robots.name = "robots";
+    robots.content = "noindex,nofollow";
+    document.head.appendChild(robots);
+    const desc = document.createElement("meta");
+    desc.name = "description";
+    desc.content = "Private NelliDESiGN GatewayHub admin dashboard for managing portfolio brochures and site settings.";
+    document.head.appendChild(desc);
+    const canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    canonical.href = window.location.origin + "/gatewayhub/admin";
+    document.head.appendChild(canonical);
     if (!getToken()) {
       nav("/gatewayhub", { replace: true });
-      return;
+      return () => {
+        document.head.removeChild(robots);
+        document.head.removeChild(desc);
+        document.head.removeChild(canonical);
+      };
     }
     void load();
     api.getSettings()
       .then((s) => setNavPosition(s.navPosition === "bottom" ? "bottom" : "top"))
       .catch(() => {/* ignore */});
+    return () => {
+      document.head.removeChild(robots);
+      document.head.removeChild(desc);
+      document.head.removeChild(canonical);
+    };
   }, [nav]);
 
   const updateNavPosition = async (pos: "top" | "bottom") => {
