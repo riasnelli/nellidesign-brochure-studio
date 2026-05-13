@@ -139,7 +139,7 @@ $from = $__env('CONTACT_FROM_EMAIL', 'no-reply@' . preg_replace('/^www\./', '', 
 $subject = 'New brochure enquiry — ' . $name;
 
 $lines = [
-  'New enquiry from the NelliDESiGN website',
+  'New enquiry from the BrochureDesign.Pro website',
   '----------------------------------------',
   'Name:           ' . $name,
   'Email:          ' . $email,
@@ -158,7 +158,7 @@ $lines = [
 $message = implode("\r\n", $lines);
 
 $headers = [
-  'From: NelliDESiGN Website <' . $from . '>',
+  'From: BrochureDesign.Pro Website <' . $from . '>',
   'Reply-To: ' . $name . ' <' . $email . '>',
   'X-Mailer: PHP/' . phpversion(),
   'Content-Type: text/plain; charset=UTF-8',
