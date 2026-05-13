@@ -49,8 +49,8 @@ const buildWhatsAppMessage = (f: FormState) => {
     value.trim() ? `• ${label}: ${value.trim()}` : `• ${label}: _`;
 
   const intro = f.name.trim()
-    ? `Hi NelliDESiGN 👋, this is ${f.name.trim()}.`
-    : "Hi NelliDESiGN 👋,";
+    ? `Hi BrochureDesign.Pro 👋, this is ${f.name.trim()}.`
+    : "Hi BrochureDesign.Pro 👋,";
 
   const body = [
     intro,
