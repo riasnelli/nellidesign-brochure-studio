@@ -26,6 +26,28 @@ function _resp($data, int $code = 200) {
   exit;
 }
 
+function _log_enquiry(array $entry) {
+  $logDir = __DIR__ . '/logs';
+  if (!is_dir($logDir)) @mkdir($logDir, 0755, true);
+  // Protect against direct web access
+  $ht = $logDir . '/.htaccess';
+  if (!file_exists($ht)) @file_put_contents($ht, "Require all denied\nDeny from all\n");
+  $line = json_encode($entry, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  @file_put_contents($logDir . '/enquiries.log', $line . "\n", FILE_APPEND | LOCK_EX);
+}
+
+$__log = [
+  'ts'             => gmdate('Y-m-d\TH:i:s\Z'),
+  'ip'             => $_SERVER['REMOTE_ADDR'] ?? null,
+  'ua'             => substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 250),
+  'recaptcha'      => 'skipped',
+  'email_delivery' => 'not_attempted',
+];
+
+register_shutdown_function(function () use (&$__log) {
+  _log_enquiry($__log);
+});
+
 // --- Parse JSON body ---
 $raw = file_get_contents('php://input');
 $body = json_decode($raw, true);
