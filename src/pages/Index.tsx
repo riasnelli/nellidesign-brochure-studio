@@ -1,19 +1,20 @@
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
-import { BottomNav } from "@/components/landing/BottomNav";
 import { Hero } from "@/components/landing/Hero";
-import { Projects } from "@/components/landing/Projects";
-import { WhyMe } from "@/components/landing/WhyMe";
-import { Services } from "@/components/landing/Services";
-import { Process } from "@/components/landing/Process";
-import { About } from "@/components/landing/About";
-import { Tools } from "@/components/landing/Tools";
-import { Pricing } from "@/components/landing/Pricing";
-import { Testimonials } from "@/components/landing/Testimonials";
-import { FAQ } from "@/components/landing/FAQ";
-import { Contact } from "@/components/landing/Contact";
-import { Footer } from "@/components/landing/Footer";
-import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+
+const BottomNav = lazy(() => import("@/components/landing/BottomNav").then(m => ({ default: m.BottomNav })));
+const Projects = lazy(() => import("@/components/landing/Projects").then(m => ({ default: m.Projects })));
+const WhyMe = lazy(() => import("@/components/landing/WhyMe").then(m => ({ default: m.WhyMe })));
+const Services = lazy(() => import("@/components/landing/Services").then(m => ({ default: m.Services })));
+const Process = lazy(() => import("@/components/landing/Process").then(m => ({ default: m.Process })));
+const About = lazy(() => import("@/components/landing/About").then(m => ({ default: m.About })));
+const Tools = lazy(() => import("@/components/landing/Tools").then(m => ({ default: m.Tools })));
+const Pricing = lazy(() => import("@/components/landing/Pricing").then(m => ({ default: m.Pricing })));
+const Testimonials = lazy(() => import("@/components/landing/Testimonials").then(m => ({ default: m.Testimonials })));
+const FAQ = lazy(() => import("@/components/landing/FAQ").then(m => ({ default: m.FAQ })));
+const Contact = lazy(() => import("@/components/landing/Contact").then(m => ({ default: m.Contact })));
+const Footer = lazy(() => import("@/components/landing/Footer").then(m => ({ default: m.Footer })));
 
 const Index = () => {
   const [navPosition, setNavPosition] = useState<"top" | "bottom">("top");
