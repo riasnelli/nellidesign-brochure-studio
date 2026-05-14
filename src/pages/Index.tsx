@@ -85,18 +85,20 @@ const Index = () => {
     <main>
       {navPosition === "top" && <Navbar />}
       <Hero compact={navPosition === "bottom"} />
-      <Projects />
-      <WhyMe />
-      <Services />
-      <Process />
-      <About />
-      <Tools />
-      <Pricing />
-      <Testimonials />
-      <FAQ />
-      <Contact />
-      <Footer />
-      {navPosition === "bottom" && <BottomNav />}
+      <Suspense fallback={null}>
+        <Projects />
+        <WhyMe />
+        <Services />
+        <Process />
+        <About />
+        <Tools />
+        <Pricing />
+        <Testimonials />
+        <FAQ />
+        <Contact />
+        <Footer />
+        {navPosition === "bottom" && <BottomNav />}
+      </Suspense>
     </main>
   );
 };
