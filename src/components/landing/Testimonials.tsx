@@ -2,9 +2,9 @@ import { Reveal } from "@/components/Reveal";
 import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import avatarMohamed from "@/assets/review-mohamed.jpg";
-import avatarCorinne from "@/assets/review-corinne.jpg";
-import avatarCaptain from "@/assets/review-captain.jpg";
+import avatarMohamed from "@/assets/review-mohamed.webp";
+import avatarCorinne from "@/assets/review-corinne.webp";
+import avatarCaptain from "@/assets/review-captain.webp";
 
 const GoogleG = ({ size = 18 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">

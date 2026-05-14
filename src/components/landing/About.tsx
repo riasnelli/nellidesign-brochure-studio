@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
-import portrait from "@/assets/about-portrait.jpg";
+import portrait from "@/assets/about-portrait.webp";
 
 export const About = () => (
   <section id="about" className="py-24 md:py-32">
