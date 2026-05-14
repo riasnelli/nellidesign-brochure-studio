@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-import heroImg from "@/assets/hero-brochures.webp";
+import heroImg from "@/assets/hero-brochures-lg.webp";
+import heroImgSm from "@/assets/hero-brochures-sm.webp";
 import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
 export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
@@ -53,13 +54,14 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
           <div className="absolute -inset-4 bg-gradient-accent opacity-20 blur-3xl rounded-[3rem]" aria-hidden />
           <img
             src={heroImg}
+            srcSet={`${heroImgSm} 960w, ${heroImg} 1600w`}
+            sizes="(max-width: 768px) 100vw, 1200px"
             alt="Premium corporate brochure designs by NelliDESiGN"
             width={1600}
-            height={1200}
+            height={900}
             fetchPriority="high"
             decoding="async"
             loading="eager"
-            sizes="(max-width: 768px) 100vw, 1200px"
             className="relative w-full rounded-3xl shadow-card"
           />
         </div>
