@@ -90,9 +90,16 @@ export const Contact = () => {
   const captchaRef = useRef<HTMLDivElement>(null);
   const captchaIdRef = useRef<number | null>(null);
 
-  // Load reCAPTCHA v2 script + render widget
+  const [captchaLoaded, setCaptchaLoaded] = useState(false);
+
+  // Lazy-load reCAPTCHA only after first form interaction (saves ~360KB on initial load)
+  const ensureCaptcha = () => {
+    if (captchaLoaded || !RECAPTCHA_SITE_KEY) return;
+    setCaptchaLoaded(true);
+  };
+
   useEffect(() => {
-    if (!RECAPTCHA_SITE_KEY) return;
+    if (!captchaLoaded || !RECAPTCHA_SITE_KEY) return;
 
     const renderWidget = () => {
       if (!window.grecaptcha || !captchaRef.current || captchaIdRef.current !== null) return;
@@ -120,7 +127,7 @@ export const Contact = () => {
       }, 200);
       return () => clearInterval(t);
     }
-  }, []);
+  }, [captchaLoaded]);
 
   useEffect(() => {
     const applyPlan = (plan: string) => {
@@ -244,7 +251,7 @@ export const Contact = () => {
               </p>
             </Reveal>
             <Reveal delay={120}>
-              <form onSubmit={onSubmit} className="space-y-5">
+              <form onSubmit={onSubmit} onFocus={ensureCaptcha} onPointerDown={ensureCaptcha} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <Label htmlFor="name" className="text-background/80 text-xs uppercase tracking-wider">Name</Label>

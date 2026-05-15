@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-import heroImg from "@/assets/hero-brochures-lg.webp";
-import heroImgSm from "@/assets/hero-brochures-sm.webp";
+// Served from /public for stable URL + <link rel="preload"> in index.html
+const heroImg = "/hero-brochures-lg.webp";
+const heroImgSm = "/hero-brochures-sm.webp";
 import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
 export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
