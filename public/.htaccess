@@ -19,14 +19,37 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
-# Sensible caching for hashed Vite assets
+# Brotli compression (preferred — better ratio than gzip)
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml application/javascript application/x-javascript application/json application/xml application/rss+xml image/svg+xml font/woff2
+</IfModule>
+
+# Gzip / Deflate compression (fallback)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript application/x-javascript application/json application/xml application/rss+xml image/svg+xml
+  # Don't double-compress already-compressed assets
+  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|woff2?|br|gz)$ no-gzip dont-vary
+</IfModule>
+
+# Sensible caching for hashed Vite assets + fonts + images
 <IfModule mod_headers.c>
-  <FilesMatch "\.(?:js|css|woff2?|ttf|otf|eot|svg|png|jpe?g|webp|gif|ico)$">
+  <FilesMatch "\.(?:js|css|woff2?|ttf|otf|eot|svg|png|jpe?g|webp|avif|gif|ico)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
+  # Make sure font files send correct CORS header for preload + cross-origin
+  <FilesMatch "\.(?:woff2?|ttf|otf|eot)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
+
+# Correct MIME types
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType image/avif .avif
 </IfModule>
 
 # Force HTTPS

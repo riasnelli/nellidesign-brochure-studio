@@ -251,7 +251,7 @@ export const Contact = () => {
               </p>
             </Reveal>
             <Reveal delay={120}>
-              <form onSubmit={onSubmit} className="space-y-5">
+              <form onSubmit={onSubmit} onFocus={ensureCaptcha} onPointerDown={ensureCaptcha} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <Label htmlFor="name" className="text-background/80 text-xs uppercase tracking-wider">Name</Label>
