@@ -132,20 +132,7 @@ export const Testimonials = () => {
     };
   }, [emblaApi]);
 
-  useEffect(() => {
-    const id = "ld-json-reviews";
-    let script = document.getElementById(id) as HTMLScriptElement | null;
-    if (!script) {
-      script = document.createElement("script");
-      script.id = id;
-      script.type = "application/ld+json";
-      document.head.appendChild(script);
-    }
-    script.textContent = JSON.stringify(reviewsJsonLd);
-    return () => {
-      script?.remove();
-    };
-  }, []);
+
 
   return (
     <section className="py-24 md:py-32 bg-secondary/30">

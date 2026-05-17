@@ -61,24 +61,6 @@ const Index = () => {
     }
     canonical.href = window.location.origin + "/";
 
-    const ld = {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      name: "NelliDESiGN",
-      description: "Premium brochure design studio specialising in company profiles, product catalogues and corporate brochures.",
-      areaServed: "Worldwide",
-      url: window.location.origin,
-      telephone: "+919497127222",
-      image: window.location.origin + "/og-image.jpg",
-    };
-    let script = document.getElementById("ld-json") as HTMLScriptElement | null;
-    if (!script) {
-      script = document.createElement("script");
-      script.id = "ld-json";
-      script.type = "application/ld+json";
-      document.head.appendChild(script);
-    }
-    script.textContent = JSON.stringify(ld);
   }, []);
 
   return (
