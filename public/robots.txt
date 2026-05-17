@@ -12,3 +12,8 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /gatewayhub
+Disallow: /gatewayhub/
+Disallow: /api/
+
+Sitemap: https://brochuredesign.pro/sitemap.xml
