@@ -60,6 +60,161 @@
         unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       }
     </style>
+
+    <!-- WEBSITE SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://brochuredesign.pro/#website",
+      "url": "https://brochuredesign.pro",
+      "name": "BrochureDesign.Pro",
+      "description": "Premium brochure, company profile, and catalogue design services for businesses across India and international markets.",
+      "publisher": { "@id": "https://brochuredesign.pro/#professionalservice" }
+    }
+    </script>
+
+    <!-- PROFESSIONAL SERVICE + LOCAL BUSINESS SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["ProfessionalService", "LocalBusiness"],
+      "@id": "https://brochuredesign.pro/#professionalservice",
+      "name": "BrochureDesign.Pro",
+      "url": "https://brochuredesign.pro",
+      "image": "https://nellidesign.com/wp-content/uploads/2021/06/cropped-logo-designer-kerala.png",
+      "logo": "https://nellidesign.com/wp-content/uploads/2021/06/cropped-logo-designer-kerala.png",
+      "telephone": "+91 9497127222",
+      "email": "hello@nellidesign.com",
+      "priceRange": "₹₹",
+      "foundingDate": "2009",
+      "description": "Professional brochure design expert in India specializing in brochure design, company profile design, catalogue design, print design, packaging design, and corporate presentation design for businesses worldwide.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "#E1, Galaxy Noorain, Punathil Padam Road, Palarivattom, Edappally",
+        "addressLocality": "Ernakulam",
+        "addressRegion": "Kerala",
+        "postalCode": "682024",
+        "addressCountry": "IN"
+      },
+      "areaServed": [
+        { "@type": "Country", "name": "India" },
+        { "@type": "Country", "name": "United Arab Emirates" },
+        { "@type": "Country", "name": "United Kingdom" },
+        { "@type": "Country", "name": "United States" },
+        { "@type": "Place", "name": "Europe" },
+        { "@type": "Place", "name": "Middle East" }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/nellidesigner",
+        "https://www.instagram.com/nelli.designer",
+        "https://x.com/riasnelli"
+      ],
+      "serviceType": [
+        "Brochure Design",
+        "Company Profile Design",
+        "Catalogue Design",
+        "Print Design",
+        "Packaging Design",
+        "Corporate Presentation Design"
+      ],
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "NelliDESiGN",
+        "url": "https://www.nellidesign.com"
+      }
+    }
+    </script>
+
+    <!-- SERVICE SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": "https://brochuredesign.pro/#services",
+      "serviceType": "Brochure Design Services",
+      "provider": { "@id": "https://brochuredesign.pro/#professionalservice" },
+      "areaServed": [
+        { "@type": "Country", "name": "India" },
+        { "@type": "Country", "name": "United States" },
+        { "@type": "Country", "name": "United Arab Emirates" },
+        { "@type": "Country", "name": "United Kingdom" }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Brochure Design Services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Corporate Brochure Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Company Profile Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Catalogue Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Packaging Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Corporate Presentation Design" } }
+        ]
+      }
+    }
+    </script>
+
+    <!-- REVIEW + AGGREGATE RATING SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "@id": "https://brochuredesign.pro/#reviews",
+      "name": "BrochureDesign.Pro",
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5", "reviewCount": "5" },
+      "review": [
+        {
+          "@type": "Review",
+          "author": { "@type": "Person", "name": "Arun Jose Thomas" },
+          "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+          "reviewBody": "I started working with Nelli Design for a product label and really liked their service. The label design looked premium and the work was completed on time."
+        },
+        {
+          "@type": "Review",
+          "author": { "@type": "Person", "name": "Joseph John" },
+          "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+          "reviewBody": "Extremely satisfying experience with Rias and NelliDESiGN. Delivery was on promised time and quality of output was excellent."
+        },
+        {
+          "@type": "Review",
+          "author": { "@type": "Person", "name": "Boney Boban" },
+          "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+          "reviewBody": "If you're seeking a talented logo designer who understands branding and delivers exceptional results, look no further than Nelli Designs."
+        }
+      ]
+    }
+    </script>
+
+    <!-- FAQ SCHEMA -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "@id": "https://brochuredesign.pro/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What brochure design services do you offer?",
+          "acceptedAnswer": { "@type": "Answer", "text": "We offer brochure design, company profile design, catalogue design, print design, packaging design, and corporate presentation design services for businesses across India and international markets." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you provide print-ready brochure files?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. All brochure and catalogue projects are delivered in high-resolution print-ready formats with proper bleed, margins, and CMYK color settings." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you work with international clients?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. We work with businesses in India, UAE, UK, USA, Europe, and Middle Eastern markets through a fully remote workflow." }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does brochure design cost?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pricing depends on project scope, page count, content quality, turnaround time, and design complexity. Custom quotations are provided based on project requirements." }
+        }
+      ]
+    }
+    </script>
   </head>
 
   <body>
