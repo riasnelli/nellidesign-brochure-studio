@@ -1,7 +1,104 @@
-# NelliDESiGN
+# NelliDESiGN — BrochureDesign.Pro
 
-> Premium brochure design studio specialising in company profiles, product catalogues and corporate brochures. 15+ years of craft, conversion-led design, fixed quote in 24 hours.
+> Premium brochure design studio specialising in company profiles, product catalogues and corporate brochures. 15+ years of craft, conversion-led design, fixed quote in 24 hours. Serving India, UAE, UK, USA, Europe and Middle East.
+
+## Contact
+- Website: https://brochuredesign.pro
+- Email: hello@nellidesign.com
+- Phone: +91 94971 27222
+- Parent company: NelliDESiGN (https://www.nellidesign.com)
+- Social: @riasnelli (X/Twitter), @nellidesigner (Facebook), @nelli.designer (Instagram)
+
+## Services
+
+### Corporate Brochure Design
+Multi-page print and digital brochures for B2B and B2C businesses. Includes layout design, typography, imagery curation, and print-ready file preparation with proper bleed, margins and CMYK colour settings.
+
+### Company Profile Design
+Professional company profiles that tell your brand story — from start-ups seeking investor attention to established firms refreshing their market presence. Covers visual identity, content structure, and production-ready files.
+
+### Catalogue Design
+Product catalogues for manufacturers, retailers and distributors. Structured layouts that showcase product ranges with clear categorisation, specifications, pricing grids and call-to-action design.
+
+### Print Design
+All forms of print collateral: flyers, leaflets, posters, banners, stationery and marketing material. Delivered in press-ready formats compatible with offset and digital printing workflows.
+
+### Packaging Design
+Product packaging and label design for consumer goods, cosmetics, food & beverage, and industrial products. Includes dieline preparation, material specification guidance and print production support.
+
+### Corporate Presentation Design
+PowerPoint and Keynote presentation design for pitches, investor decks, annual reviews and sales collateral. Focus on visual storytelling, data visualisation and brand consistency.
+
+## Process
+
+1. **Brief & Discovery** — Understand your audience, goals, brand assets and content.
+2. **Concept & Strategy** — Present visual direction and structural approach for approval.
+3. **Design & Refinement** — Two full rounds of revisions included in every project.
+4. **Production & Delivery** — Print-ready files with proper technical specifications.
+
+## Pricing
+
+Fixed project quotes — no hourly billing surprises. Pricing depends on:
+- Page count and document length
+- Content quality and availability
+- Turnaround time requirements
+- Design complexity and custom illustration needs
+
+Typical brochure projects range from ₹15,000 to ₹1,50,000+. Custom quotations provided within 24 hours of receiving a brief.
+
+## Turnaround Time
+
+- Standard brochure/company profile: 7–14 days from brief approval
+- Catalogue design: 10–21 days depending on product count
+- Rush projects available on request
+
+## Geographic Reach
+
+Fully remote workflow. Active client base in:
+- India (Kerala, Bangalore, Mumbai, Delhi, Chennai)
+- United Arab Emirates (Dubai, Abu Dhabi, Sharjah)
+- United Kingdom (London, Manchester)
+- United States
+- Europe
+- Middle East
+
+## Client Reviews
+
+- Arun Jose Thomas: "I started working with Nelli Design for a product label and really liked their service. The label design looked premium and the work was completed on time." — 5 stars
+- Joseph John: "Extremely satisfying experience with Rias and NelliDESiGN. Delivery was on promised time and quality of output was excellent." — 5 stars
+- Boney Boban: "If you're seeking a talented logo designer who understands branding and delivers exceptional results, look no further than Nelli Designs." — 5 stars
+
+## FAQ
+
+**How long does a brochure project take?**
+Most company profiles and brochures take 7–14 days from brief approval to print-ready files. Rush projects are possible.
+
+**Do you provide content writing?**
+Design-focused, but works closely with client copy and can recommend trusted copywriters.
+
+**What do I need to start?**
+A brief covering audience, goals, page count and existing brand assets (logo, fonts, photos).
+
+**Do you handle printing?**
+Delivers press-ready files and recommends reliable print partners locally and internationally.
+
+**How many revisions are included?**
+Two full rounds included. Additional rounds can be added.
+
+## About the Designer
+
+Rias — founder of NelliDESiGN. 15+ years of experience in graphic design, branding and print production. Based in Kerala, India. Specialises in creating brochures, company profiles and catalogues that drive business results.
+
+## Tools & Software
+
+Adobe InDesign, Adobe Illustrator, Adobe Photoshop, Adobe Acrobat, Figma, Microsoft PowerPoint, Apple Keynote.
 
 ## Pages
 
-- [Home](/): Overview of services, selected work, process, pricing, reviews and contact for NelliDESiGN brochure design studio.
+- [Home](/): Overview of services, selected work, process, pricing, reviews and contact.
+- [Services](/#services): Detailed breakdown of brochure design, company profile, catalogue, print, packaging and presentation services.
+- [Projects](/#projects): Selected portfolio of brochure and company profile design work.
+- [Pricing](/#pricing): Project-based pricing information and quote request.
+- [About](/#about): Designer background, experience and approach.
+- [FAQ](/#faq): Common questions about process, timeline, content and revisions.
+- [Contact](/#contact): Quote request form and direct contact details.
