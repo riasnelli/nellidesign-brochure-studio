@@ -14,16 +14,12 @@ export const Projects = () => {
   const [brochures, setBrochures] = useState<Brochure[]>([]);
 
   useEffect(() => {
-    // Load the live admin-managed portfolio list from the backend.
-    // We intentionally don't ship a hardcoded fallback list — the static
-    // /brochures/<slug>/thumbnail.jpg paths don't exist on the production
-    // host and trigger 422 errors from the image optimizer.
-    fetch("/api/brochures.php", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (Array.isArray(data)) setBrochures(data.filter((b) => b.thumbnail && b.pdf));
-      })
-      .catch(() => {});
+    // Reuse the warm fetch promise kicked off from index.html when available.
+    const pre = (typeof window !== "undefined" && (window as any).__preFetch?.["/api/brochures.php"]) as Promise<unknown> | undefined;
+    const p = pre ?? fetch("/api/brochures.php", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    p.then((data) => {
+      if (Array.isArray(data)) setBrochures(data.filter((b: Brochure) => b.thumbnail && b.pdf));
+    });
   }, []);
 
   return (
@@ -56,9 +52,12 @@ export const Projects = () => {
               >
                 <div className="relative overflow-hidden rounded-2xl bg-secondary aspect-[4/5] shadow-soft">
                   <img
-                    src={b.thumbnail}
+                    src={`${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=600`}
+                    srcSet={`${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=400 400w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=600 600w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=900 900w`}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     alt={`${b.title} brochure design - ${b.category}`}
                     loading="lazy"
+                    decoding="async"
                     width={900}
                     height={1100}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
