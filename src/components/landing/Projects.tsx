@@ -14,16 +14,12 @@ export const Projects = () => {
   const [brochures, setBrochures] = useState<Brochure[]>([]);
 
   useEffect(() => {
-    // Load the live admin-managed portfolio list from the backend.
-    // We intentionally don't ship a hardcoded fallback list — the static
-    // /brochures/<slug>/thumbnail.jpg paths don't exist on the production
-    // host and trigger 422 errors from the image optimizer.
-    fetch("/api/brochures.php", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (Array.isArray(data)) setBrochures(data.filter((b) => b.thumbnail && b.pdf));
-      })
-      .catch(() => {});
+    // Reuse the warm fetch promise kicked off from index.html when available.
+    const pre = (typeof window !== "undefined" && (window as any).__preFetch?.["/api/brochures.php"]) as Promise<unknown> | undefined;
+    const p = pre ?? fetch("/api/brochures.php", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    p.then((data) => {
+      if (Array.isArray(data)) setBrochures(data.filter((b: Brochure) => b.thumbnail && b.pdf));
+    });
   }, []);
 
   return (
