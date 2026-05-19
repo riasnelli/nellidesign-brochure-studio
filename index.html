@@ -48,6 +48,16 @@
       fetchpriority="high"
     />
 
+    <!-- Kick off API requests early so they don't chain behind lazy chunks -->
+    <link rel="preload" as="fetch" href="/api/brochures.php" crossorigin="anonymous" />
+    <link rel="preload" as="fetch" href="/api/settings.php" crossorigin="anonymous" />
+    <script>
+      // Warm in-flight promises the React app can reuse instead of refetching.
+      window.__preFetch = window.__preFetch || {};
+      window.__preFetch['/api/brochures.php'] = fetch('/api/brochures.php', { credentials: 'same-origin' }).then(r => r.ok ? r.json() : null).catch(() => null);
+      window.__preFetch['/api/settings.php'] = fetch('/api/settings.php', { credentials: 'same-origin' }).then(r => r.ok ? r.json() : null).catch(() => null);
+    </script>
+
     <!-- Preload critical self-hosted fonts (latin subset) -->
     <link rel="preload" href="/fonts/bricolage-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
