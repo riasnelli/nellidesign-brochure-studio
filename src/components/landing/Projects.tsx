@@ -48,7 +48,7 @@ export const Projects = () => {
           <Reveal key={b.slug} delay={i * 80}>
             <article>
               <a
-                href={b.pdf || `/brochures/${b.slug}/file.pdf`}
+                href={b.pdf}
                 target="_blank"
                 rel="noopener noreferrer"
                 title={`View ${b.title} brochure PDF`}
@@ -56,7 +56,7 @@ export const Projects = () => {
               >
                 <div className="relative overflow-hidden rounded-2xl bg-secondary aspect-[4/5] shadow-soft">
                   <img
-                    src={b.thumbnail || `/brochures/${b.slug}/thumbnail.jpg`}
+                    src={b.thumbnail}
                     alt={`${b.title} brochure design - ${b.category}`}
                     loading="lazy"
                     width={900}
