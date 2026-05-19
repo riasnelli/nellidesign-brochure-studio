@@ -1,6 +1,5 @@
 import { Reveal } from "@/components/Reveal";
 import { ArrowUpRight } from "lucide-react";
-import { brochures as fallback } from "@/data/brochures";
 import { useEffect, useState } from "react";
 
 type Brochure = {
@@ -12,14 +11,17 @@ type Brochure = {
 };
 
 export const Projects = () => {
-  const [brochures, setBrochures] = useState<Brochure[]>(fallback);
+  const [brochures, setBrochures] = useState<Brochure[]>([]);
 
   useEffect(() => {
-    // Load the live admin-managed portfolio list; fall back silently.
+    // Load the live admin-managed portfolio list from the backend.
+    // We intentionally don't ship a hardcoded fallback list — the static
+    // /brochures/<slug>/thumbnail.jpg paths don't exist on the production
+    // host and trigger 422 errors from the image optimizer.
     fetch("/api/brochures.php", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (Array.isArray(data) && data.length) setBrochures(data);
+        if (Array.isArray(data)) setBrochures(data.filter((b) => b.thumbnail && b.pdf));
       })
       .catch(() => {});
   }, []);
