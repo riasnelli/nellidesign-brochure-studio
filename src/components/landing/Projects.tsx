@@ -52,9 +52,12 @@ export const Projects = () => {
               >
                 <div className="relative overflow-hidden rounded-2xl bg-secondary aspect-[4/5] shadow-soft">
                   <img
-                    src={b.thumbnail}
+                    src={`${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=600`}
+                    srcSet={`${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=400 400w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=600 600w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=900 900w`}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     alt={`${b.title} brochure design - ${b.category}`}
                     loading="lazy"
+                    decoding="async"
                     width={900}
                     height={1100}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
