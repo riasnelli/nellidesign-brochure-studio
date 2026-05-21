@@ -29,13 +29,25 @@
     <meta name="twitter:description" content="Premium brochure, company profile & catalogue design. Print-ready, conversion-led. Fixed quote in 24 hours." />
     <meta name="twitter:image" content="https://brochuredesign.pro/og-image.jpg" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M8WDEZND1R"></script>
+    <!-- Google tag (gtag.js) — deferred until idle so it doesn't compete with LCP -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-M8WDEZND1R');
+      (function(){
+        var load = function(){
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-M8WDEZND1R';
+          document.head.appendChild(s);
+        };
+        if ('requestIdleCallback' in window) {
+          window.addEventListener('load', function(){ requestIdleCallback(load, { timeout: 4000 }); });
+        } else {
+          window.addEventListener('load', function(){ setTimeout(load, 2500); });
+        }
+      })();
     </script>
 
     <!-- Preload LCP hero image (responsive) -->
