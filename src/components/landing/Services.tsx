@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/Reveal";
+import { useCallback } from "react";
 
 const services = [
   { title: "Company Profile", desc: "Polished introductions that build instant credibility with new clients and investors.", tag: "12–24 pages" },
@@ -9,35 +10,55 @@ const services = [
   { title: "Event & Pitch Decks", desc: "Investor decks, event programs and conference brochures with impact.", tag: "On-demand" },
 ];
 
-export const Services = () => (
-  <section id="services" className="py-24 md:py-32">
-    <div className="container">
-      <Reveal>
-        <div className="max-w-2xl mb-14">
-          <p className="text-xs uppercase tracking-[0.2em] text-accent font-medium mb-4">Services</p>
-          <h2 className="text-4xl md:text-5xl font-display font-medium text-balance">
-            Every kind of brochure your business needs.
-          </h2>
+export const Services = () => {
+  const selectService = useCallback((serviceTitle: string) => {
+    try {
+      sessionStorage.setItem("selectedService", serviceTitle);
+    } catch {}
+    window.dispatchEvent(
+      new CustomEvent("service:selected", { detail: { service: serviceTitle } })
+    );
+    const el = document.getElementById("contact");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    else window.location.hash = "#contact";
+  }, []);
+
+  return (
+    <section id="services" className="py-24 md:py-32">
+      <div className="container">
+        <Reveal>
+          <div className="max-w-2xl mb-14">
+            <p className="text-xs uppercase tracking-[0.2em] text-accent font-medium mb-4">Services</p>
+            <h2 className="text-4xl md:text-5xl font-display font-medium text-balance">
+              Every kind of brochure your business needs.
+            </h2>
+          </div>
+        </Reveal>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-3xl overflow-hidden border border-border">
+          {services.map((s, i) => (
+            <Reveal key={s.title} delay={i * 60}>
+              <article
+                className="h-full bg-background p-8 hover:bg-secondary/50 transition-colors group cursor-pointer"
+                onClick={() => selectService(s.title)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectService(s.title); } }}
+              >
+                <div className="flex items-baseline justify-between mb-6">
+                  <span className="text-xs text-muted-foreground tabular-nums">0{i + 1}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+                    {s.tag}
+                  </span>
+                </div>
+                <h3 className="font-display text-2xl font-medium mb-3 group-hover:text-accent transition-colors">
+                  {s.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+              </article>
+            </Reveal>
+          ))}
         </div>
-      </Reveal>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-3xl overflow-hidden border border-border">
-        {services.map((s, i) => (
-          <Reveal key={s.title} delay={i * 60}>
-            <article className="h-full bg-background p-8 hover:bg-secondary/50 transition-colors group">
-              <div className="flex items-baseline justify-between mb-6">
-                <span className="text-xs text-muted-foreground tabular-nums">0{i + 1}</span>
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
-                  {s.tag}
-                </span>
-              </div>
-              <h3 className="font-display text-2xl font-medium mb-3 group-hover:text-accent transition-colors">
-                {s.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-            </article>
-          </Reveal>
-        ))}
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};

@@ -149,20 +149,55 @@ export const Contact = () => {
       }, 600);
     };
 
+    const applyService = (service: string) => {
+      if (!service) return;
+      setForm((prev) => {
+        const serviceLine = `Interested service: ${service}`;
+        const already = prev.project.includes("Interested service:");
+        const nextProject = already
+          ? prev.project.replace(/Interested service: .*/m, serviceLine)
+          : (prev.project ? `${serviceLine}\n\n${prev.project}` : `${serviceLine}\n\n`);
+        return {
+          ...prev,
+          brochureType: service,
+          project: nextProject,
+        };
+      });
+      setTimeout(() => {
+        document.getElementById("project")?.focus({ preventScroll: true });
+      }, 600);
+    };
+
     try {
-      const stored = sessionStorage.getItem("selectedPlan");
-      if (stored) {
-        applyPlan(stored);
+      const storedPlan = sessionStorage.getItem("selectedPlan");
+      if (storedPlan) {
+        applyPlan(storedPlan);
         sessionStorage.removeItem("selectedPlan");
       }
     } catch {}
 
-    const handler = (e: Event) => {
+    try {
+      const storedService = sessionStorage.getItem("selectedService");
+      if (storedService) {
+        applyService(storedService);
+        sessionStorage.removeItem("selectedService");
+      }
+    } catch {}
+
+    const planHandler = (e: Event) => {
       const detail = (e as CustomEvent<{ plan: string }>).detail;
       if (detail?.plan) applyPlan(detail.plan);
     };
-    window.addEventListener("plan:selected", handler);
-    return () => window.removeEventListener("plan:selected", handler);
+    const serviceHandler = (e: Event) => {
+      const detail = (e as CustomEvent<{ service: string }>).detail;
+      if (detail?.service) applyService(detail.service);
+    };
+    window.addEventListener("plan:selected", planHandler);
+    window.addEventListener("service:selected", serviceHandler);
+    return () => {
+      window.removeEventListener("plan:selected", planHandler);
+      window.removeEventListener("service:selected", serviceHandler);
+    };
   }, []);
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
