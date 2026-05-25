@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import portrait from "@/assets/about-portrait.webp";
 import portraitMd from "@/assets/about-portrait-md.webp";
 import portraitSm from "@/assets/about-portrait-sm.webp";
+import portraitXs from "@/assets/about-portrait-xs.webp";
 
 export const About = () => (
   <section id="about" className="py-24 md:py-32">
