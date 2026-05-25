@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import portrait from "@/assets/about-portrait.webp";
+import portraitMd from "@/assets/about-portrait-md.webp";
 import portraitSm from "@/assets/about-portrait-sm.webp";
 
 export const About = () => (
@@ -11,8 +12,8 @@ export const About = () => (
           <div className="relative">
             <div className="absolute -inset-6 bg-gradient-accent opacity-15 blur-3xl rounded-3xl" aria-hidden />
             <img
-              src={portraitSm}
-              srcSet={`${portraitSm} 600w, ${portrait} 1200w`}
+              src={portraitMd}
+              srcSet={`${portraitSm} 400w, ${portraitMd} 600w, ${portrait} 1200w`}
               sizes="(max-width: 1024px) 90vw, 448px"
               alt="Riasnelli — independent brochure design expert and founder of NelliDESiGN studio"
               title="Riasnelli — Brochure Design Expert at NelliDESiGN"
