@@ -33,9 +33,9 @@ $types = [
 $reqW = isset($_GET['w']) ? (int)$_GET['w'] : 0;
 $canResize = $ext !== 'pdf' && $reqW > 0 && $reqW <= 2000 && function_exists('imagecreatefromstring');
 if ($canResize) {
-  // Snap to a small set of sizes so the cache stays bounded.
-  $sizes = [400, 600, 900, 1200];
-  $target = $sizes[0];
+    // Snap to a small set of sizes so the cache stays bounded.
+    $sizes = [300, 400, 500, 700, 900, 1200];
+    $target = $sizes[0];
   foreach ($sizes as $s) if ($reqW >= $s) $target = $s;
 
   $cacheDir = BROCHURES_DIR . "/$slug/.cache";
