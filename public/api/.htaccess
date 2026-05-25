@@ -19,6 +19,11 @@ php_value post_max_size 55M
   Require all denied
 </FilesMatch>
 
+# Block docs/data files that shouldn't be web-accessible
+<FilesMatch "\.(md|txt|json|example)$">
+  Require all denied
+</FilesMatch>
+
 # No directory listings
 Options -Indexes
 
