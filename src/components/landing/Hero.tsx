@@ -56,7 +56,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
           <div className="absolute -inset-4 bg-gradient-accent opacity-20 blur-3xl rounded-[3rem]" aria-hidden />
           <img
             src={heroImg}
-            srcSet={`${heroImgSm} 960w, ${heroImg} 1600w`}
+            srcSet={`${heroImgMd} 600w, ${heroImgSm} 960w, ${heroImg} 1600w`}
             sizes="(max-width: 768px) 100vw, 1200px"
             alt="Premium corporate brochure designs by NelliDESiGN"
             width={1600}
