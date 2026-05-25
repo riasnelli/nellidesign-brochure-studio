@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 // Served from /public for stable URL + <link rel="preload"> in index.html
 const heroImg = "/hero-brochures-lg.webp";
+const heroImgMd = "/hero-brochures-md.webp";
 const heroImgSm = "/hero-brochures-sm.webp";
 import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
