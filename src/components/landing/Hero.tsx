@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 // Served from /public for stable URL + <link rel="preload"> in index.html
 const heroImg = "/hero-brochures-lg.webp";
+const heroImgMd = "/hero-brochures-md.webp";
 const heroImgSm = "/hero-brochures-sm.webp";
 import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
@@ -55,7 +56,7 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
           <div className="absolute -inset-4 bg-gradient-accent opacity-20 blur-3xl rounded-[3rem]" aria-hidden />
           <img
             src={heroImg}
-            srcSet={`${heroImgSm} 960w, ${heroImg} 1600w`}
+            srcSet={`${heroImgMd} 600w, ${heroImgSm} 960w, ${heroImg} 1600w`}
             sizes="(max-width: 768px) 100vw, 1200px"
             alt="Premium corporate brochure designs by NelliDESiGN"
             width={1600}
