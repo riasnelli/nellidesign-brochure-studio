@@ -54,7 +54,7 @@ export const Projects = () => {
                   <img
                     src={`${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=400`}
                     srcSet={`${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=300 300w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=500 500w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=700 700w, ${b.thumbnail}${b.thumbnail!.includes("?") ? "&" : "?"}w=900 900w`}
-                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 45vw, 30vw"
+                    sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
                     alt={`${b.title} brochure design - ${b.category}`}
                     loading="lazy"
                     decoding="async"
