@@ -55,10 +55,14 @@
       rel="preload"
       as="image"
       href="/hero-brochures-lg.webp"
-      imagesrcset="/hero-brochures-sm.webp 960w, /hero-brochures-lg.webp 1600w"
+      imagesrcset="/hero-brochures-md.webp 600w, /hero-brochures-sm.webp 960w, /hero-brochures-lg.webp 1600w"
       imagesizes="(max-width: 768px) 100vw, 1200px"
       fetchpriority="high"
     />
+
+    <!-- Preconnect to analytics origin so the deferred GTM request is faster when it fires -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
     <!-- Kick off API requests early so they don't chain behind lazy chunks -->
     <link rel="preload" as="fetch" href="/api/brochures.php" crossorigin="anonymous" />
