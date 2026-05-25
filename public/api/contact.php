@@ -133,8 +133,13 @@ if ($secret !== '') {
 
 // --- Build email ---
 $to   = $__env('CONTACT_TO_EMAIL', defined('CONTACT_TO_EMAIL') ? (string)constant('CONTACT_TO_EMAIL') : 'hello@nellidesign.com');
-$host = $_SERVER['HTTP_HOST'] ?? 'nellidesign.com';
+$rawHost = $_SERVER['HTTP_HOST'] ?? 'nellidesign.com';
+// Strip everything except safe hostname chars to prevent CRLF / header injection
+$host = preg_replace('/[^a-zA-Z0-9.\-]/', '', $rawHost);
+if ($host === '') { $host = 'nellidesign.com'; }
 $from = $__env('CONTACT_FROM_EMAIL', 'no-reply@' . preg_replace('/^www\./', '', $host));
+// Final safety: reject any from-address containing CR/LF
+if (preg_match('/[\r\n]/', $from)) { $from = 'no-reply@nellidesign.com'; }
 
 $subject = 'New brochure enquiry — ' . $name;
 
