@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 const heroImg = "/hero-brochures-lg.webp";
 const heroImgMd = "/hero-brochures-md.webp";
 const heroImgSm = "/hero-brochures-sm.webp";
+const heroImgXs = "/hero-brochures-xs.webp";
 import { GoogleReviewBadge } from "@/components/GoogleReviewBadge";
 
 export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
