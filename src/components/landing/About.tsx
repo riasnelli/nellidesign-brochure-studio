@@ -14,8 +14,8 @@ export const About = () => (
             <div className="absolute -inset-6 bg-gradient-accent opacity-15 blur-3xl rounded-3xl" aria-hidden />
             <img
               src={portraitMd}
-              srcSet={`${portraitSm} 400w, ${portraitMd} 600w, ${portrait} 1200w`}
-              sizes="(max-width: 1024px) 90vw, 448px"
+              srcSet={`${portraitXs} 400w, ${portraitMd} 480w, ${portraitSm} 600w, ${portrait} 800w`}
+              sizes="(max-width: 640px) 92vw, (max-width: 1024px) 60vw, 448px"
               alt="Riasnelli — independent brochure design expert and founder of NelliDESiGN studio"
               title="Riasnelli — Brochure Design Expert at NelliDESiGN"
               loading="lazy"
