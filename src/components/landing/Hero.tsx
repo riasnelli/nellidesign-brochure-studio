@@ -29,12 +29,12 @@ export const Hero = ({ compact = false }: { compact?: boolean } = {}) => {
             </p>
             <GoogleReviewBadge />
           </div>
-          <h1 className="font-medium text-muted-foreground mb-2 whitespace-nowrap md:whitespace-normal text-[1rem] md:text-[1.3rem]">
+          <p className="font-medium text-muted-foreground mb-2 whitespace-nowrap md:whitespace-normal text-[1rem] md:text-[1.3rem]">
             Professional Brochure Design Expert in India
-          </h1>
-          <h2 className="font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
+          </p>
+          <h1 className="font-display font-bold tracking-tight leading-[0.95] text-balance text-[3rem] md:text-[5.5rem]">
             Brochures that <span className="text-accent italic">perform</span>,<span className="hidden md:inline">{" "}<br /></span> not just inform.
-          </h2>
+          </h1>
           <p className="mt-7 text-lg md:text-xl text-muted-foreground mx-auto text-balance" style={{ maxWidth: "52rem" }}>
             Premium brochure, company profile, and catalogue design services for ambitious brands across India — crafted for print, branding, and sales performance.
           </p>
