@@ -183,18 +183,24 @@ export const Testimonials = () => {
               ))}
             </div>
           </div>
-          <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Reviews navigation">
+          <div className="flex justify-center gap-1 mt-6" role="tablist" aria-label="Reviews navigation">
             {items.map((_, i) => (
               <button
                 key={i}
                 type="button"
+                role="tab"
                 aria-label={`Go to review ${i + 1}`}
                 aria-selected={selected === i}
                 onClick={() => emblaApi?.scrollTo(i)}
-                className={`h-2 rounded-full transition-all ${
-                  selected === i ? "w-6 bg-foreground" : "w-2 bg-border"
-                }`}
-              />
+                className="inline-flex items-center justify-center min-h-11 min-w-11 p-2"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`h-2 rounded-full transition-all ${
+                    selected === i ? "w-6 bg-foreground" : "w-2 bg-border"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>
