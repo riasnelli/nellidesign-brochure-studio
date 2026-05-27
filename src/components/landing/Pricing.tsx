@@ -4,7 +4,7 @@ import { Check, FileText, Sparkles, CheckCircle2, PackageCheck } from "lucide-re
 
 const plans = [
   {
-    name: "Basic",
+    name: "Essential",
     price: "₹1,500",
     unit: "/ Page",
     tagline: "For quick, no-frills brochures",
@@ -17,7 +17,7 @@ const plans = [
       "Print-ready high-resolution files",
     ],
     best: "Small businesses, simple flyers, fast requirements",
-    cta: "Order Basic",
+    cta: "Order Essential",
     highlight: false,
   },
   {
@@ -41,7 +41,7 @@ const plans = [
     highlight: true,
   },
   {
-    name: "Premium",
+    name: "Custom",
     badge: "Custom Experience",
     price: "Custom",
     unit: "Pricing",
