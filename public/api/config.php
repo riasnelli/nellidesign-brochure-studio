@@ -51,7 +51,9 @@ $__jwtSecret = $__env('GATEWAYHUB_JWT_SECRET', defined('JWT_SECRET') ? JWT_SECRE
 
 function gatewayhub_secrets_ready(): bool {
   global $__adminEmail, $__adminHash, $__jwtSecret;
-  return $__adminEmail !== '' && $__adminHash !== '' && $__jwtSecret !== '' && $__jwtSecret !== 'CHANGE-ME';
+  return $__adminEmail !== '' && $__adminHash !== '' && $__jwtSecret !== ''
+    && $__jwtSecret !== 'CHANGE-ME' && $__jwtSecret !== 'REPLACE_ME_WITH_64_HEX_CHARS'
+    && password_get_info($__adminHash)['algo'] !== null;
 }
 
 function require_gatewayhub_secrets(): void {
