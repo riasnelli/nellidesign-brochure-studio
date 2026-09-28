@@ -40,7 +40,9 @@ if ($canResize) {
 
   $cacheDir = BROCHURES_DIR . "/$slug/.cache";
   if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
-  $cachePath = "$cacheDir/thumb-$target.webp";
+  // Include the source filename so replacing JPG with PNG cannot reuse the
+  // previous thumbnail's cached WebP at the same requested width.
+  $cachePath = "$cacheDir/thumb-" . strtolower($file) . "-$target.webp";
 
   if (!is_file($cachePath) || filemtime($cachePath) < filemtime($path)) {
     $raw = @file_get_contents($path);
@@ -64,7 +66,8 @@ if ($canResize) {
 
   if (is_file($cachePath)) {
     header('Content-Type: image/webp');
-    header('Cache-Control: public, max-age=31536000, immutable');
+    // Admin uploads replace images at the same URL, so these are not immutable.
+    header('Cache-Control: public, max-age=300, must-revalidate');
     header('X-Content-Type-Options: nosniff');
     header('Content-Length: ' . filesize($cachePath));
     readfile($cachePath);
@@ -73,7 +76,7 @@ if ($canResize) {
 }
 
 header('Content-Type: ' . ($types[$ext] ?? 'application/octet-stream'));
-header('Cache-Control: public, max-age=31536000, immutable');
+header('Cache-Control: public, max-age=300, must-revalidate');
 header('X-Content-Type-Options: nosniff');
 header('Content-Length: ' . filesize($path));
 readfile($path);
