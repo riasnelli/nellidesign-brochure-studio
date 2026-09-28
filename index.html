@@ -144,6 +144,8 @@
       },
       "areaServed": [
         { "@type": "Country", "name": "India" },
+        { "@type": "AdministrativeArea", "name": "Kerala", "containedInPlace": { "@type": "Country", "name": "India" } },
+        { "@type": "City", "name": "Kochi", "containedInPlace": { "@type": "AdministrativeArea", "name": "Kerala" } },
         { "@type": "Country", "name": "United Arab Emirates" },
         { "@type": "Country", "name": "United Kingdom" },
         { "@type": "Country", "name": "United States" },
@@ -163,6 +165,7 @@
         "Packaging Design",
         "Corporate Presentation Design"
       ],
+      "hasOfferCatalog": { "@id": "https://brochuredesign.pro/#brochure-services-catalog" },
       "parentOrganization": {
         "@type": "Organization",
         "name": "NelliDESiGN",
@@ -187,13 +190,15 @@
       ],
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
+        "@id": "https://brochuredesign.pro/#brochure-services-catalog",
         "name": "Brochure Design Services",
         "itemListElement": [
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Corporate Brochure Design" } },
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Company Profile Design" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Catalogue Design" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Packaging Design" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Corporate Presentation Design" } }
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Product Catalogue Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Annual Report Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Real Estate Brochure Design" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Event and Pitch Deck Design" } }
         ]
       }
     }
