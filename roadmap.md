@@ -1,0 +1,3 @@
+- [x] Update high-severity packages from the first uploaded list to patched compatible releases; the withdrawn esbuild/Deno advisory is not applicable to this Vite build.
+- [x] Update moderate-severity packages from the second uploaded list, including React Router and test tooling.
+- [x] Verify resolved dependency versions, tests, and deployment lockfile; note any remaining blockers.
