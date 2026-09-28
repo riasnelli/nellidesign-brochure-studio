@@ -1,5 +1,5 @@
 - [x] Update high-severity packages from the first uploaded list to patched compatible releases; the withdrawn esbuild/Deno advisory is not applicable to this Vite build.
 - [x] Update moderate-severity packages from the second uploaded list, including React Router and test tooling.
 - [x] Verify resolved dependency versions, tests, and deployment lockfile; note any remaining blockers.
-- [ ] Deploy the verified package updates to Hostinger — corrected workflow locally; blocked until the Lovable change syncs to GitHub and the new workflow run completes. If it fails again, inspect the run's private log for the Hostinger connection error.
+- [ ] Deploy the verified package updates to Hostinger — corrected workflow locally (removed duplicate transfer and normalized the FTP host); blocked until the Lovable change syncs to GitHub and the new workflow run completes. If it fails again, inspect the run's private log for the Hostinger connection error.
 - [ ] Confirm the updated live site and GatewayHub after deployment — blocked by the pending Hostinger upload; current pages return HTTP 200 and the sign-in endpoint returns the expected HTTP 405 for GET, but sign-in needs the user's own credentials.

@@ -72,10 +72,28 @@ jobs:
           fi
           echo "Wrote dist/api/secrets.php ($(wc -c < dist/api/secrets.php) bytes)"
 
+      - name: Validate FTP host
+        id: ftp-host
+        env:
+          FTP_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
+        run: |
+          set -euo pipefail
+          # Accept a hostname or an accidentally pasted ftp(s):// URL.
+          host="${FTP_HOST#ftp://}"
+          host="${host#ftps://}"
+          host="${host%%/*}"
+          host="${host%%:*}"
+          if [[ ! "$host" =~ ^[a-zA-Z0-9.-]+$ ]] || [[ "$host" != *.* ]]; then
+            echo 'HOSTINGER_FTP_HOST must contain a valid FTP hostname (without a path or port).' >&2
+            exit 1
+          fi
+          echo "::add-mask::$host"
+          echo "host=$host" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          server: ${{ steps.ftp-host.outputs.host }}
           username: ${{ secrets.HOSTINGER_FTP_USER }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           server-dir: ${{ secrets.HOSTINGER_FTP_DIR }}
