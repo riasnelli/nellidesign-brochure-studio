@@ -30,6 +30,9 @@ jobs:
           VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
         run: npm run build
 
+      - name: Check built structured data
+        run: node scripts/check-structured-data.mjs dist/index.html
+
       - name: Write api/secrets.php from GitHub Secrets
         # Generates dist/api/secrets.php at build time using repo secrets so the
         # file is uploaded to the server on every deploy (and never committed
@@ -115,3 +118,6 @@ jobs:
             brochures/**
             **/api/config.local.php
             api/config.local.php
+
+      - name: Verify live structured data
+        run: node scripts/check-structured-data.mjs dist/index.html https://brochuredesign.pro/
