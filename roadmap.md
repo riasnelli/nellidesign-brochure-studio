@@ -1,0 +1,3 @@
+- [ ] Update high-severity packages from the first uploaded list to patched compatible releases.
+- [ ] Update moderate-severity packages from the second uploaded list, including React Router and test tooling.
+- [ ] Verify resolved dependency versions, tests, and deployment lockfile; note any remaining blockers.
