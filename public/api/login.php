@@ -13,8 +13,8 @@ $password = $body['password'] ?? '';
 
 if (!$email || !$password) json_error('Email and password required');
 
-$emailOk = hash_equals(strtolower(ADMIN_EMAIL), $email);
-$passOk = password_verify($password, ADMIN_PASSWORD_HASH);
+$emailOk = hash_equals(strtolower($__adminEmail), $email);
+$passOk = password_verify($password, $__adminHash);
 
 if (!$emailOk || !$passOk) {
   usleep(400000); // slow brute force

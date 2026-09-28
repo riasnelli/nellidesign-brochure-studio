@@ -43,18 +43,15 @@ $__env = function (string $name, ?string $default = null): ?string {
   return $default;
 };
 
-if (!defined('ADMIN_EMAIL')) {
-  define('ADMIN_EMAIL', $__env('GATEWAYHUB_ADMIN_EMAIL', ''));
-}
-if (!defined('ADMIN_PASSWORD_HASH')) {
-  define('ADMIN_PASSWORD_HASH', $__env('GATEWAYHUB_ADMIN_PASSWORD_HASH', ''));
-}
-if (!defined('JWT_SECRET')) {
-  define('JWT_SECRET', $__env('GATEWAYHUB_JWT_SECRET', ''));
-}
+// A generated secrets.php may contain older credentials. Do not let its
+// constants silently override newer Hostinger environment values.
+$__adminEmail = $__env('GATEWAYHUB_ADMIN_EMAIL', defined('ADMIN_EMAIL') ? ADMIN_EMAIL : '');
+$__adminHash = $__env('GATEWAYHUB_ADMIN_PASSWORD_HASH', defined('ADMIN_PASSWORD_HASH') ? ADMIN_PASSWORD_HASH : '');
+$__jwtSecret = $__env('GATEWAYHUB_JWT_SECRET', defined('JWT_SECRET') ? JWT_SECRET : '');
 
 function gatewayhub_secrets_ready(): bool {
-  return ADMIN_EMAIL !== '' && ADMIN_PASSWORD_HASH !== '' && JWT_SECRET !== '' && JWT_SECRET !== 'CHANGE-ME';
+  global $__adminEmail, $__adminHash, $__jwtSecret;
+  return $__adminEmail !== '' && $__adminHash !== '' && $__jwtSecret !== '' && $__jwtSecret !== 'CHANGE-ME';
 }
 
 function require_gatewayhub_secrets(): void {

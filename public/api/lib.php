@@ -25,17 +25,19 @@ function b64url_decode(string $s): string {
   return base64_decode(strtr($s, '-_', '+/'));
 }
 function jwt_sign(array $payload): string {
+  global $__jwtSecret;
   $header = ['alg' => 'HS256', 'typ' => 'JWT'];
   $h = b64url(json_encode($header));
   $p = b64url(json_encode($payload));
-  $sig = b64url(hash_hmac('sha256', "$h.$p", JWT_SECRET, true));
+  $sig = b64url(hash_hmac('sha256', "$h.$p", $__jwtSecret, true));
   return "$h.$p.$sig";
 }
 function jwt_verify(string $token): ?array {
+  global $__jwtSecret;
   $parts = explode('.', $token);
   if (count($parts) !== 3) return null;
   [$h, $p, $sig] = $parts;
-  $expected = b64url(hash_hmac('sha256', "$h.$p", JWT_SECRET, true));
+  $expected = b64url(hash_hmac('sha256', "$h.$p", $__jwtSecret, true));
   if (!hash_equals($expected, $sig)) return null;
   $payload = json_decode(b64url_decode($p), true);
   if (!is_array($payload)) return null;
@@ -93,7 +95,8 @@ function require_same_origin(): void {
 // The CSRF token is HMAC(JWT_SECRET, jti). It's returned to the client at
 // login time and must be echoed back as X-CSRF-Token on every write request.
 function csrf_for(string $jti): string {
-  return b64url(hash_hmac('sha256', 'csrf:' . $jti, JWT_SECRET, true));
+  global $__jwtSecret;
+  return b64url(hash_hmac('sha256', 'csrf:' . $jti, $__jwtSecret, true));
 }
 function require_csrf(array $jwtPayload): void {
   require_gatewayhub_secrets();
