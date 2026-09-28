@@ -1,8 +1,8 @@
 name: Deploy to Hostinger
 
-# Auto-builds the Vite app on every push to main and FTP-uploads dist/
-# to Hostinger's public_html. Server-only files (gatewayhub-data/, brochures/, api/secrets.php)
-# are excluded so live data and credentials are never overwritten.
+# Auto-builds the Vite app on every push to main and uploads dist/ over FTPS
+# to Hostinger's public_html. Live data is excluded; api/secrets.php is generated
+# from GitHub Secrets in dist/ and uploaded by the same deployment action.
 
 on:
   push:
@@ -72,39 +72,36 @@ jobs:
           fi
           echo "Wrote dist/api/secrets.php ($(wc -c < dist/api/secrets.php) bytes)"
 
-      - name: Force-upload api/secrets.php without deleting remote files
-        # The normal sync can skip server-only files depending on sync state.
-        # This uploads only secrets.php and never deletes anything on Hostinger.
+      - name: Validate FTP host
+        id: ftp-host
         env:
-          HOSTINGER_FTP_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
-          HOSTINGER_FTP_USER: ${{ secrets.HOSTINGER_FTP_USER }}
-          HOSTINGER_FTP_PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
-          HOSTINGER_FTP_DIR: ${{ secrets.HOSTINGER_FTP_DIR }}
+          FTP_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
         run: |
           set -euo pipefail
-          : "${HOSTINGER_FTP_HOST:?Missing GitHub secret HOSTINGER_FTP_HOST}"
-          : "${HOSTINGER_FTP_USER:?Missing GitHub secret HOSTINGER_FTP_USER}"
-          : "${HOSTINGER_FTP_PASSWORD:?Missing GitHub secret HOSTINGER_FTP_PASSWORD}"
-          : "${HOSTINGER_FTP_DIR:?Missing GitHub secret HOSTINGER_FTP_DIR}"
-          REMOTE_PATH="${HOSTINGER_FTP_DIR%/}/api/secrets.php"
-          # Use FTPS (explicit TLS) so credentials + secrets.php are encrypted in transit.
-          curl --fail --silent --show-error --ftp-create-dirs --ssl-reqd \
-            --user "$HOSTINGER_FTP_USER:$HOSTINGER_FTP_PASSWORD" \
-            --upload-file dist/api/secrets.php \
-            "ftps://${HOSTINGER_FTP_HOST}/${REMOTE_PATH}"
-          echo "Uploaded api/secrets.php directly over FTPS"
+          # Accept a hostname or an accidentally pasted ftp(s):// URL.
+          host="${FTP_HOST#ftp://}"
+          host="${host#ftps://}"
+          host="${host%%/*}"
+          host="${host%%:*}"
+          if [[ ! "$host" =~ ^[a-zA-Z0-9.-]+$ ]] || [[ "$host" != *.* ]]; then
+            echo 'HOSTINGER_FTP_HOST must contain a valid FTP hostname (without a path or port).' >&2
+            exit 1
+          fi
+          echo "::add-mask::$host"
+          echo "host=$host" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          server: ${{ steps.ftp-host.outputs.host }}
           username: ${{ secrets.HOSTINGER_FTP_USER }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           server-dir: ${{ secrets.HOSTINGER_FTP_DIR }}
           local-dir: ./dist/
           protocol: ftps
           dangerous-clean-slate: false
-          # Protect live data + secrets on the server.
+          # Protect live data on the server. The generated secrets.php is
+          # intentionally included in dist/ and uploaded by this action.
           # Patterns are matched against BOTH local files (won't upload)
           # AND remote files (won't delete). Use **/ prefix so the match
           # works at any depth on the server.
