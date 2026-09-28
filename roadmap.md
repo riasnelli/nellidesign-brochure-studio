@@ -1,3 +1,5 @@
 - [x] Update high-severity packages from the first uploaded list to patched compatible releases; the withdrawn esbuild/Deno advisory is not applicable to this Vite build.
 - [x] Update moderate-severity packages from the second uploaded list, including React Router and test tooling.
 - [x] Verify resolved dependency versions, tests, and deployment lockfile; note any remaining blockers.
+- [ ] Deploy the verified package updates to Hostinger — blocked: GitHub Actions upload of `api/secrets.php` failed, and Hostinger/GitHub deployment credentials are unavailable here. Inspect the failed step, correct its FTPS configuration, then rerun the workflow.
+- [ ] Confirm the updated live site and GatewayHub after deployment — blocked by the failed Hostinger upload; current live pages render successfully, but the new packages are not deployed.
