@@ -15,7 +15,7 @@ export const Footer = () => (
           </a>
         </span>
       </div>
-      <p>© {new Date().getFullYear()} NelliDESiGN.COM</p>
+      <p>© {new Date().getFullYear()} NelliDESiGN.COM · Brochure Design Expert in India</p>
     </div>
   </footer>
 );
