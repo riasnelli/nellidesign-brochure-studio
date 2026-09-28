@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { api, Brochure, clearSession, getToken } from "@/lib/api";
-import { brochures as fallbackBrochures } from "@/data/brochures";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, LogOut, Pencil, Plus, Trash2, X } from "lucide-react";
 
@@ -98,11 +97,9 @@ const Admin = () => {
       const data = await api.list();
       setItems(data);
     } catch (err) {
-      // Fallback to static list so the panel is usable even if API isn't deployed yet
-      setItems(
-        fallbackBrochures.map((b, i) => ({ ...b, order: i, thumbnail: `/brochures/${b.slug}/thumbnail.jpg`, pdf: `/brochures/${b.slug}/file.pdf` })),
-      );
-      toast.error(err instanceof Error ? err.message : "Could not reach API — showing static list");
+      // Never show a fictitious editable list when the server cannot be read.
+      setItems([]);
+      toast.error(err instanceof Error ? err.message : "Could not load brochures");
     } finally {
       setLoading(false);
     }
@@ -286,7 +283,7 @@ const Admin = () => {
           {items.map((b, i) => (
             <Card key={b.slug} className="p-4 flex items-center gap-4">
               <img
-                src={b.thumbnail || `/brochures/${b.slug}/thumbnail.jpg`}
+                src={b.thumbnail}
                 alt=""
                 className="w-16 h-20 object-cover rounded-md bg-secondary flex-shrink-0"
                 loading="lazy"
