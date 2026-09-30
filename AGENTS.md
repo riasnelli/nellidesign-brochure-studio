@@ -6,3 +6,4 @@
 - Keep Vite's development plugins within its supported peer range when upgrading Vite, because mismatched major versions can break the local preview or clean deployment install.
 - Generate `dist/api/secrets.php` from GitHub Secrets and upload it with the single FTPS deployment action, not a separate curl transfer, because the duplicate upload can block the entire site deployment.
 - Verify the built JSON-LD before Hostinger upload and compare it with live HTML afterward, because valid local markup alone does not prove the intended schema is deployed.
+- Isolate lazy landing sections with individual error boundaries and verify all deployed build assets after FTP upload, because a missing chunk must not blank the page or go unnoticed.

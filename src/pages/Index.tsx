@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
 import { api } from "@/lib/api";
@@ -15,6 +15,27 @@ const Testimonials = lazy(() => import("@/components/landing/Testimonials").then
 const FAQ = lazy(() => import("@/components/landing/FAQ").then(m => ({ default: m.FAQ })));
 const Contact = lazy(() => import("@/components/landing/Contact").then(m => ({ default: m.Contact })));
 const Footer = lazy(() => import("@/components/landing/Footer").then(m => ({ default: m.Footer })));
+
+// A failed download of one optional section must not remove the entire page.
+class SectionBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error("Page section could not load", error);
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
+const Section = ({ children }: { children: ReactNode }) => (
+  <SectionBoundary><Suspense fallback={null}>{children}</Suspense></SectionBoundary>
+);
 
 const Index = () => {
   const [navPosition, setNavPosition] = useState<"top" | "bottom">("top");
@@ -67,20 +88,18 @@ const Index = () => {
     <main>
       {navPosition === "top" && <Navbar />}
       <Hero compact={navPosition === "bottom"} />
-      <Suspense fallback={null}>
-        <Projects />
-        <WhyMe />
-        <Services />
-        <Process />
-        <About />
-        <Tools />
-        <Pricing />
-        <Testimonials />
-        <FAQ />
-        <Contact />
-        <Footer />
-        {navPosition === "bottom" && <BottomNav />}
-      </Suspense>
+      <Section><Projects /></Section>
+      <Section><WhyMe /></Section>
+      <Section><Services /></Section>
+      <Section><Process /></Section>
+      <Section><About /></Section>
+      <Section><Tools /></Section>
+      <Section><Pricing /></Section>
+      <Section><Testimonials /></Section>
+      <Section><FAQ /></Section>
+      <Section><Contact /></Section>
+      <Section><Footer /></Section>
+      {navPosition === "bottom" && <Section><BottomNav /></Section>}
     </main>
   );
 };

@@ -121,3 +121,6 @@ jobs:
 
       - name: Verify live structured data
         run: node scripts/check-structured-data.mjs dist/index.html https://brochuredesign.pro/
+
+      - name: Verify live app assets
+        run: node scripts/check-live-assets.mjs dist https://brochuredesign.pro/

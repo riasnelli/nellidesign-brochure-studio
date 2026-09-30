@@ -38,6 +38,10 @@
   # ---- 7) Don't rewrite the API folder — let PHP handle it ----
   RewriteRule ^api/ - [L]
 
+  # Missing build assets are errors, not SPA pages. Returning HTML for a
+  # JavaScript import causes a MIME error and can blank the React page.
+  RewriteRule ^assets/ - [L]
+
   # ---- 8) Don't rewrite real files or directories ----
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d

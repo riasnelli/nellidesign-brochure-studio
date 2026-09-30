@@ -5,3 +5,5 @@
 - [ ] Confirm the updated live site and GatewayHub after deployment — blocked by the pending Hostinger upload; current pages return HTTP 200 and the sign-in endpoint returns the expected HTTP 405 for GET, but sign-in needs the user's own credentials.
 - [x] Upgrade Vite and compatible development plugins; force esbuild to 0.28.1 or newer.
 - [x] Regenerate npm and Bun lockfiles; verify clean installation, tests, and automated build result.
+- [x] Isolate landing sections so a missing lazy-loaded asset cannot blank the entire page; return 404 for missing build assets.
+- [ ] Confirm Hostinger receives the changes and all built assets load — blocked until the GitHub workflow runs with the deployment credentials.
